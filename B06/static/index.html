@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate B06 — 机器学习闭环</title>
+<style>
+  :root {
+    --primary: #b39ddb; --primary-dark: #9575cd; --primary-darker: #7e57c2;
+    --bg: #f3effa; --card: #ffffff; --border: #e3ddf0; --text: #332f3d; --muted: #8a8498;
+    --ok: #1b7a3d; --err: #c62828; --warn: #b26a00;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 32px 16px; display: flex; justify-content: center; }
+  .main-card { width: 100%; max-width: 1000px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 28px rgba(94,74,138,0.10), 0 2px 6px rgba(0,0,0,0.04); padding: 30px 34px 26px; }
+  h1 { font-size: 22px; margin: 0 0 6px; color: var(--primary-darker); }
+  .badge { display: inline-block; font-size: 12px; font-weight: normal; background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 6px; }
+  .tip { font-size: 12px; color: var(--muted); margin: 0 0 8px; line-height: 1.7; }
+  h2 { font-size: 15px; margin: 28px 0 14px; color: var(--primary-darker); border-left: 4px solid var(--primary); padding-left: 10px; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff; padding: 18px 20px; }
+  .btn { padding: 9px 20px; font-size: 13px; cursor: pointer; border: none; border-radius: 8px; background: var(--primary); color: #fff; transition: background-color .2s ease, transform .1s ease; }
+  .btn:hover { background: var(--primary-dark); }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { background: #d6cee8; cursor: not-allowed; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 10px; }
+  .stat { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: #fbfaff; }
+  .stat .k { font-size: 12px; color: var(--muted); }
+  .stat .v { font-size: 20px; font-weight: 700; color: var(--primary-darker); margin-top: 4px; }
+  .feat-row { font-size: 12px; color: var(--muted); line-height: 1.9; }
+  .feat-row code { background: #f7f4fb; border-radius: 4px; padding: 0 5px; color: var(--primary-darker); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; }
+  .pill { border-radius: 999px; padding: 2px 12px; font-size: 12px; font-weight: 600; display: inline-block; }
+  .pill.ok { background: #e6f4ea; color: var(--ok); border: 1px solid #b7dfc2; }
+  .pill.warn { background: #fdf3e0; color: var(--warn); border: 1px solid #eed9a8; }
+  .pill.info { background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); }
+  .pill.model { background: #e8f1fb; color: #1565c0; border: 1px solid #c4ddf5; }
+
+  .err-box { margin-top: 10px; border: 1px solid #f3c0c0; background: #fdeeee; color: var(--err); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.8; }
+  .explain { margin-top: 10px; font-size: 13px; line-height: 1.8; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: #fbfaff; }
+  .bar-wrap { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 12px; }
+  .bar { height: 10px; border-radius: 5px; background: var(--primary); }
+  .foot { margin-top: 24px; font-size: 12px; color: var(--muted); }
+  .foot a { color: var(--primary-darker); }
+</style>
+</head>
+<body>
+<div class="main-card">
+  <h1>GreenMate B06 · 机器学习闭环 <span class="badge">可解释 · 可复现 · 传统ML</span></h1>
+  <p class="tip">
+    复用 B02 环境样本：最近 6 点（3h）输入窗口 → 8 个骨架特征（current/mean/delta）→ 预测未来 1–2h 的
+    next_window_attention（NORMAL / WATCH）。前 5 天训练、后 2 天测试（时间切分无泄露）；测试集不参与训练。
+    标签由透明规则生成（label_source 仅元数据）；sim_scenario、B03 天气不进入特征。
+  </p>
+
+  <h2>1. 数据集概览</h2>
+  <div class="panel">
+    <div id="overview">（加载中…）</div>
+    <div class="feat-row" id="featRow"></div>
+  </div>
+
+  <h2>2. 训练 + 评估（朴素基线 vs 传统 ML）</h2>
+  <div class="panel">
+    <button class="btn" id="trainBtn" onclick="doTrain()">训练 + 评估 + 保存</button>
+    <div id="trainResult" style="margin-top:12px;">（尚未训练；点击按钮执行完整闭环，约数秒）</div>
+  </div>
+
+  <h2>3. 错误样本解释（FP / FN）</h2>
+  <div class="panel" id="errorsBox">（训练后显示）</div>
+
+  <h2>4. 最新窗口推理（MODEL_OUTPUT）</h2>
+  <div class="panel">
+    <button class="btn" onclick="doPredict()">最新 6 点推理</button>
+    <div id="predictResult" style="margin-top:12px;">（训练后可用）</div>
+  </div>
+
+  <div class="foot">数据流：B02 SQLite（原始值）→ 窗口化 → 8 骨架特征 → 模型（与 B03 天气 / B04 知识证据分离） · <a href="/B05">B05</a> · <a href="/">B01</a></div>
+</div>
+
+<script>
+var $ = function (id) { return document.getElementById(id); };
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+async function loadOverview() {
+  try {
+    var res = await fetch("/B06/api/overview");
+    var d = await res.json();
+    $("overview").innerHTML = '<div class="grid">' +
+      stat("窗口样本总数", d.total_windows) +
+      stat("训练集（前5天）", d.train_n) +
+      stat("测试集（后2天）", d.test_n) +
+      stat("跨边界丢弃", d.dropped_cross_boundary) +
+      stat("NORMAL 样本", d.label_dist.NORMAL || 0) +
+      stat("WATCH 样本", d.label_dist.WATCH || 0) +
+      '</div><div class="feat-row" style="margin-top:10px;">窗口配置：window_size=' +
+      d.window_config.window_size + '（3h） | prediction_horizon=' +
+      d.window_config.prediction_horizon + '（2h） | 时间边界：' + d.train_end_boundary + '</div>';
+    $("featRow").innerHTML = "8 个骨架特征： " + d.feature_names.map(function (f) {
+      return "<code>" + f + "</code>";
+    }).join(" ") + "<br>" + escapeHtml(d.note);
+  } catch (e) {
+    $("overview").textContent = "加载失败：" + (e.message || e);
+  }
+}
+
+function stat(k, v) {
+  return '<div class="stat"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>';
+}
+
+async function doTrain() {
+  $("trainBtn").disabled = true;
+  $("trainResult").textContent = "训练中（窗口化→特征→切分→基线→ML→评估→保存）…";
+  try {
+    var res = await fetch("/B06/api/train", { method: "POST" });
+    var d = await res.json();
+    renderTrain(d);
+  } catch (e) {
+    $("trainResult").innerHTML = '<div class="err-box">训练失败：' + escapeHtml(e.message || e) + "</div>";
+  } finally {
+    $("trainBtn").disabled = false;
+  }
+}
+
+function renderTrain(d) {
+  var cm = d.ml_metrics.confusion_matrix;
+  var html = '<table><tr><th>模型</th><th>F1 macro</th><th>F1 weighted</th>' +
+    '<th>recall NORMAL</th><th>recall WATCH</th><th>混淆矩阵 (TN/FP/FN/TP)</th></tr>' +
+    '<tr><td>多数类基线（' + escapeHtml(d.baseline_majority_class) + '）</td><td>—</td><td>' +
+    d.baseline_metrics.f1_weighted + '</td><td>' + d.baseline_metrics.recall_NORMAL + '</td><td>' +
+    d.baseline_metrics.recall_WATCH + '</td><td>' + cmOf(d.baseline_metrics.confusion_matrix) + "</td></tr>" +
+    '<tr><td><b>RandomForest（' + escapeHtml(d.model_version) + '）</b></td><td>' +
+    d.ml_metrics.f1_macro + '</td><td><b>' + d.ml_metrics.f1_weighted + '</b></td><td>' +
+    d.ml_metrics.recall_NORMAL + '</td><td>' + d.ml_metrics.recall_WATCH + '</td><td>' +
+    cmOf(cm) + "</td></tr></table>";
+  html += '<div class="explain"><b>性能对比解释：</b>基线只输出多数类，recall_WATCH=0（完全无法发现风险）；' +
+    'ML 通过 8 个骨架特征学习到「高温/低湿/夜间强光」与 WATCH 的关联，显著提升 WATCH 召回。' +
+    '（实测数值见上方表格）</div>';
+  html += '<div class="explain"><b>特征重要性（可解释性）：</b>' +
+    Object.keys(d.feature_importances).map(function (f) {
+      var v = d.feature_importances[f];
+      return '<div class="bar-wrap"><span style="width:130px;display:inline-block;">' + f + '</span>' +
+        '<span class="bar" style="width:' + Math.round(v * 400) + 'px;"></span>' +
+        v.toFixed(3) + "</div>";
+    }).join("") + "</div>";
+  html += '<div class="explain">训练完成时间：' + escapeHtml(d.trained_at) +
+    ' | 训练样本 ' + d.dataset.train_n + ' / 测试样本 ' + d.dataset.test_n +
+    ' | 标签分布 训练 ' + JSON.stringify(d.dataset.label_dist_train) +
+    ' / 测试 ' + JSON.stringify(d.dataset.label_dist_test) + "</div>";
+  $("trainResult").innerHTML = html;
+
+  var errs = d.error_samples || [];
+  $("errorsBox").innerHTML = errs.length ? errs.map(function (e) {
+    var pill = e.kind === "FP" ? '<span class="pill warn">假阳性 FP</span>'
+      : '<span class="pill warn">假阴性 FN</span>';
+    return '<div class="explain">' + pill +
+      " 真实=" + escapeHtml(e.true_label) + " 预测=" + escapeHtml(e.predicted_label) +
+      " | 标签规则: " + escapeHtml(e.label_source || "无") + "<br>可回溯时段: " +
+      escapeHtml(e.window) + "<br>特征: " + escapeHtml(JSON.stringify(e.features)) +
+      "<br>模型概率: " + escapeHtml(JSON.stringify(e.model_proba)) +
+      "<br><b>解释：</b>" + escapeHtml(e.explanation) + "</div>";
+  }).join("") : '<div class="explain">本模型在测试集上没有 FP/FN 错误样本</div>';
+}
+
+function cmOf(cm) {
+  return cm.TN + " / " + cm.FP + " / " + cm.FN + " / " + cm.TP;
+}
+
+async function doPredict() {
+  $("predictResult").textContent = "推理中（取 B02 最新 6 点 → 特征 → 模型）…";
+  try {
+    var res = await fetch("/B06/api/predict", { method: "POST" });
+    var d = await res.json();
+    if (d.detail) { throw new Error(d.detail); }
+    var pill = d.predicted_attention === "WATCH"
+      ? '<span class="pill warn">WATCH</span>' : '<span class="pill ok">NORMAL</span>';
+    $("predictResult").innerHTML =
+      '<span class="pill model">MODEL_OUTPUT</span> 预测 next_window_attention：' + pill +
+      ' <span class="pill info">model_version: ' + escapeHtml(d.model_version) + '</span><br>' +
+      '<div class="explain">输入窗口：' + escapeHtml(d.input_window.start) + ' ~ ' +
+      escapeHtml(d.input_window.end) + '（' + d.input_window.window_size + ' 点）<br>' +
+      "类别概率：" + escapeHtml(JSON.stringify(d.probability)) +
+      "<br>特征：" + escapeHtml(JSON.stringify(d.features_used)) +
+      "<br><b>不确定性：</b>" + escapeHtml(d.uncertainty) +
+      "<br><b>适用边界：</b>" + escapeHtml(d.applicability) + "</div>";
+  } catch (e) {
+    $("predictResult").innerHTML = '<div class="err-box">推理失败：' + escapeHtml(e.message || e) +
+      "（请先点「训练 + 评估 + 保存」）</div>";
+  }
+}
+
+loadOverview();
+</script>
+</body>
+</html>

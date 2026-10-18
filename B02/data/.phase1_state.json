@@ -1,0 +1,44 @@
+{
+  "count": 344,
+  "head": [
+    {
+      "timestamp": "2026-10-07 00:00:00",
+      "temperature": 16.3,
+      "humidity": 70.4,
+      "light": 5.0
+    },
+    {
+      "timestamp": "2026-10-07 00:30:00",
+      "temperature": 15.6,
+      "humidity": 70.1,
+      "light": 5.0
+    },
+    {
+      "timestamp": "2026-10-07 01:00:00",
+      "temperature": 15.0,
+      "humidity": 73.1,
+      "light": 6.0
+    }
+  ],
+  "tail": [
+    {
+      "timestamp": "2026-10-14 03:30:00",
+      "temperature": 14.3,
+      "humidity": 73.5,
+      "light": 4.0
+    },
+    {
+      "timestamp": "2026-10-14 03:00:00",
+      "temperature": 14.2,
+      "humidity": 74.7,
+      "light": 5.0
+    },
+    {
+      "timestamp": "2026-10-14 02:30:00",
+      "temperature": 14.2,
+      "humidity": 73.1,
+      "light": 5.0
+    }
+  ],
+  "last": "2026-10-14 03:30:00"
+}

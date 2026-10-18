@@ -1,0 +1,51 @@
+{
+  "dataset": "greenmate_b02",
+  "sample_interval_minutes": 30,
+  "days": 7,
+  "expected_samples": 336,
+  "seed": 42,
+  "generated_at": "2026-10-14 01:29:21",
+  "note": "sim_scenario 仅为模拟器元数据，不作为标签",
+  "disturbances": [
+    {
+      "id": "D1",
+      "type": "heat_wave",
+      "start": "2026-10-08 12:00:00",
+      "end": "2026-10-08 18:00:00",
+      "description": "热浪：温度 +8℃，湿度 -15%，光照 +10%",
+      "ramp_samples": 2
+    },
+    {
+      "id": "D2",
+      "type": "overcast_rain",
+      "start": "2026-10-09 06:00:00",
+      "end": "2026-10-09 18:00:00",
+      "description": "阴雨：光照 ×0.15，湿度 +12%，温度 -2℃",
+      "ramp_samples": 2
+    },
+    {
+      "id": "D3",
+      "type": "cold_front",
+      "start": "2026-10-10 18:00:00",
+      "end": "2026-10-11 06:00:00",
+      "description": "冷锋过境：温度 -6℃，湿度 +10%",
+      "ramp_samples": 2
+    },
+    {
+      "id": "D4",
+      "type": "night_light_anomaly",
+      "start": "2026-10-11 21:00:00",
+      "end": "2026-10-11 23:30:00",
+      "description": "夜间强光异常：光照恒定 8000 lux",
+      "ramp_samples": 2
+    },
+    {
+      "id": "D5",
+      "type": "dry_dust",
+      "start": "2026-10-12 00:00:00",
+      "end": "2026-10-13 00:00:00",
+      "description": "干燥沙尘：湿度 -18%，温度 +3℃，光照 ×0.8",
+      "ramp_samples": 2
+    }
+  ]
+}

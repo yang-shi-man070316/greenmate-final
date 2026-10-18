@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate B01 — 模拟环境 + LLM 问答</title>
+<style>
+  /* ===== 主题变量（浅紫 GreenMate 主题） ===== */
+  :root {
+    --primary: #b39ddb;
+    --primary-dark: #9575cd;
+    --primary-darker: #7e57c2;
+    --bg: #f3effa;
+    --card: #ffffff;
+    --border: #e3ddf0;
+    --text: #332f3d;
+    --muted: #8a8498;
+    --ok: #1b7a3d;
+    --err: #c62828;
+    --info: #5e35b1;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    font-family: system-ui, "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ===== 主体白色卡片容器：整体居中 + 圆角 + 柔和阴影 ===== */
+  .main-card {
+    width: 100%;
+    max-width: 940px;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(94, 74, 138, 0.10), 0 2px 6px rgba(0, 0, 0, 0.04);
+    padding: 30px 34px 26px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    color: var(--primary-darker);
+  }
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: normal;
+    background: var(--bg);
+    color: var(--primary-darker);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 2px 10px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .tip { font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+
+  h2 {
+    font-size: 15px;
+    margin: 28px 0 14px;
+    color: var(--primary-darker);
+    border-left: 4px solid var(--primary);
+    padding-left: 10px;
+  }
+
+  /* ===== 状态卡片：左右并排、大内边距、数值放大突出 ===== */
+  .state-cards {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .state-card {
+    flex: 1;
+    min-width: 240px;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    cursor: pointer;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease, background-color .2s ease;
+  }
+  .state-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 6px 16px rgba(179, 157, 219, 0.25);
+    transform: translateY(-2px);
+  }
+  .state-card.active {
+    border-color: var(--primary-dark);
+    background: #f7f3fc;
+    box-shadow: 0 4px 14px rgba(149, 117, 205, 0.22);
+  }
+  .state-card .name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--primary-darker);
+    margin-bottom: 16px;
+  }
+  .state-card .name .source {
+    font-size: 11px;
+    font-weight: normal;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 1px 8px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .metrics { display: flex; gap: 18px; flex-wrap: wrap; }
+  .metric { display: flex; flex-direction: column; }
+  .metric-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--primary-darker);
+    line-height: 1.15;
+  }
+  .metric-value .unit { font-size: 15px; font-weight: 500; color: var(--primary-dark); margin-left: 2px; }
+  .metric-label { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  /* ===== 提问卡片 ===== */
+  .question-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fdfcff;
+    padding: 18px 20px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  input[type=text] {
+    flex: 1;
+    min-width: 240px;
+    padding: 10px 14px;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  input[type=text]:focus {
+    border-color: var(--primary-dark);
+    box-shadow: 0 0 0 3px rgba(179, 157, 219, 0.25);
+  }
+
+  /* ===== 按钮：紫色 + 悬浮加深 + 过渡 ===== */
+  .btn {
+    padding: 10px 26px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #ffffff;
+    transition: background-color .2s ease, transform .1s ease, box-shadow .2s ease;
+  }
+  .btn:hover { background: var(--primary-dark); box-shadow: 0 3px 10px rgba(149, 117, 205, 0.35); }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { background: #d6cee8; cursor: not-allowed; box-shadow: none; }
+
+  /* ===== AI 回答卡片 ===== */
+  .answer-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #fdfcff;
+    padding: 18px 20px;
+  }
+  #answer {
+    min-height: 48px;
+    white-space: pre-wrap;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  #answer.error { color: var(--err); }
+  #answerMeta { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  details { margin-top: 12px; }
+  summary { cursor: pointer; font-size: 12px; color: var(--primary-darker); }
+  #ctx {
+    font-size: 12px;
+    background: #f7f4fb;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 8px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  /* ===== 日志卡片：浅底色 + 深色文字 ===== */
+  .log-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #f7f4fb;
+    padding: 16px 18px;
+  }
+  #log {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    color: #6b657f;
+    height: 230px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    line-height: 1.8;
+  }
+  .log-ok { color: var(--ok); }
+  .log-err { color: var(--err); }
+  .log-info { color: var(--info); }
+</style>
+</head>
+<body>
+<div class="main-card">
+  <h1>GreenMate B01 <span class="badge">SIMULATED</span></h1>
+  <p class="tip">页面展示 ≠ AI 读取。环境状态唯一数据源在服务端内存，提问时由服务端把状态 JSON 放进 LLM 上下文（可展开核对）。</p>
+
+  <h2>1. 环境状态（点击切换）</h2>
+  <div class="state-cards" id="stateCards"></div>
+
+  <h2>2. 提问</h2>
+  <div class="question-card">
+    <input type="text" id="question" value="当前环境怎么样？">
+    <button class="btn" id="askBtn">提问</button>
+  </div>
+
+  <h2>3. AI 回答</h2>
+  <div class="answer-card">
+    <div id="answer">（尚未提问）</div>
+    <div id="answerMeta"></div>
+    <details id="ctxDetails" style="display:none;">
+      <summary>查看发送给 LLM 的完整上下文（状态必须放进请求上下文）</summary>
+      <pre id="ctx"></pre>
+    </details>
+  </div>
+
+  <h2>4. 页面日志（成功 / 失败都如实记录）</h2>
+  <div class="log-card">
+    <div id="log"></div>
+  </div>
+</div>
+
+<script>
+var $ = function (id) { return document.getElementById(id); };
+
+var statesList = [];
+var currentState = null;
+
+function log(msg, level) {
+  var time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+  var cls = level === "ok" ? "log-ok" : (level === "err" ? "log-err" : "log-info");
+  var div = document.createElement("div");
+  div.innerHTML = "[" + time + "] <span class=\"" + cls + "\">" + escapeHtml(msg) + "</span>";
+  $("log").appendChild(div);
+  $("log").scrollTop = $("log").scrollHeight;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+function stateText(s) {
+  if (!s) { return "未知"; }
+  return (s.label || s.state_id) + " " + s.temperature + s.temperature_unit + " / " +
+         s.humidity + s.humidity_unit + " / " + s.light + s.light_unit + " (" + s.source_type + ")";
+}
+
+async function loadStates() {
+  try {
+    var res = await fetch("/api/states");
+    if (!res.ok) { throw new Error("HTTP " + res.status); }
+    var data = await res.json();
+    statesList = data.states;
+    currentState = statesList.find(function (s) { return s.state_id === data.current_state_id; });
+    renderStates();
+    log("已加载 " + statesList.length + " 组 SIMULATED 状态，当前: " + stateText(currentState), "ok");
+  } catch (e) {
+    log("加载状态失败: " + (e.message || e), "err");
+  }
+}
+
+function renderStates() {
+  $("stateCards").innerHTML = statesList.map(function (s) {
+    var active = currentState && s.state_id === currentState.state_id ? " active" : "";
+    return '<div class="state-card' + active + '" onclick="switchState(\'' + s.state_id + '\')">' +
+      '<div class="name">' + escapeHtml(s.label || s.state_id) +
+        '<span class="source">' + s.source_type + '</span></div>' +
+      '<div class="metrics">' +
+        '<div class="metric"><span class="metric-value">' + s.temperature + '<span class="unit">' + s.temperature_unit + '</span></span>' +
+          '<span class="metric-label">温度</span></div>' +
+        '<div class="metric"><span class="metric-value">' + s.humidity + '<span class="unit">' + s.humidity_unit + '</span></span>' +
+          '<span class="metric-label">湿度</span></div>' +
+        '<div class="metric"><span class="metric-value">' + s.light + '<span class="unit">' + s.light_unit + '</span></span>' +
+          '<span class="metric-label">光照</span></div>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+}
+
+async function switchState(id) {
+  try {
+    var res = await fetch("/api/state/switch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ state_id: id })
+    });
+    if (!res.ok) {
+      var d = await res.json().catch(function () { return {}; });
+      throw new Error(d.detail || ("HTTP " + res.status));
+    }
+    currentState = await res.json();
+    renderStates();
+    log("已切换到 " + stateText(currentState), "ok");
+  } catch (e) {
+    log("切换状态失败: " + (e.message || e), "err");
+  }
+}
+
+async function askQuestion() {
+  var question = $("question").value.trim();
+  if (!question) { log("问题不能为空", "err"); return; }
+  log("提问：「" + question + "」，当前服务端状态: " + stateText(currentState));
+  $("askBtn").disabled = true;
+  $("answer").classList.remove("error");
+  $("answer").textContent = "请求中…";
+  try {
+    var res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question: question })
+    });
+    var data = await res.json();
+    if (!res.ok) {
+      // 明确报错：显示真实错误类型与信息，绝不伪装成功
+      $("answer").textContent = "请求失败（HTTP " + res.status + "）：" + (data.message || JSON.stringify(data));
+      $("answer").classList.add("error");
+      $("answerMeta").textContent = "error_type: " + (data.error_type || "unknown") +
+        (data.detail ? " | detail: " + data.detail : "");
+      $("ctxDetails").style.display = "none";
+      log("失败 [HTTP " + res.status + "] " + (data.error_type || "") + ": " + (data.message || JSON.stringify(data)), "err");
+      return;
+    }
+    $("answer").textContent = data.answer;
+    $("answerMeta").textContent = "model: " + data.model + " | 耗时: " + data.elapsed_ms +
+      "ms | AI 读取的状态（来自请求上下文）: " + stateText(data.state_used);
+    $("ctx").textContent = JSON.stringify(data.messages_sent, null, 2);
+    $("ctxDetails").style.display = "block";
+    var brief = data.answer.slice(0, 80);
+    log("成功（" + data.elapsed_ms + "ms）：" + brief + (data.answer.length > 80 ? "…" : ""), "ok");
+  } catch (e) {
+    // 网络级失败（服务未启动、断网等），同样如实报错
+    $("answer").textContent = "请求异常：" + (e.message || e);
+    $("answer").classList.add("error");
+    $("answerMeta").textContent = "";
+    log("请求异常: " + (e.message || e), "err");
+  } finally {
+    $("askBtn").disabled = false;
+  }
+}
+
+$("askBtn").addEventListener("click", askQuestion);
+$("question").addEventListener("keydown", function (ev) {
+  if (ev.key === "Enter") { askQuestion(); }
+});
+
+loadStates();
+</script>
+</body>
+</html>

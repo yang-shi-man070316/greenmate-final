@@ -1,0 +1,2 @@
+# B06 依赖（Python 3.8：scikit-learn 会自动解析到 1.3.x，最后一个支持 3.8 的版本线）
+scikit-learn>=1.0,<1.4

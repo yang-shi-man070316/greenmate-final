@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate B03 — 真实天气证据（weather_evidence）</title>
+<style>
+  :root {
+    --primary: #b39ddb;
+    --primary-dark: #9575cd;
+    --primary-darker: #7e57c2;
+    --bg: #f3effa;
+    --card: #ffffff;
+    --border: #e3ddf0;
+    --text: #332f3d;
+    --muted: #8a8498;
+    --ok: #1b7a3d;
+    --err: #c62828;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 32px 16px; display: flex; justify-content: center; }
+  .main-card { width: 100%; max-width: 980px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 28px rgba(94,74,138,0.10), 0 2px 6px rgba(0,0,0,0.04); padding: 30px 34px 26px; }
+  h1 { font-size: 22px; margin: 0 0 6px; color: var(--primary-darker); }
+  .badge { display: inline-block; font-size: 12px; font-weight: normal; background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 6px; }
+  .tip { font-size: 12px; color: var(--muted); margin: 0 0 8px; line-height: 1.7; }
+  h2 { font-size: 15px; margin: 28px 0 14px; color: var(--primary-darker); border-left: 4px solid var(--primary); padding-left: 10px; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff; padding: 18px 20px; }
+
+  .query-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  input[type=text], select { padding: 10px 14px; font-size: 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; transition: border-color .2s ease, box-shadow .2s ease; }
+  input[type=text]:focus, select:focus { border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(179,157,219,0.25); }
+  input[type=text] { flex: 1; min-width: 220px; }
+  .btn { padding: 10px 26px; font-size: 14px; cursor: pointer; border: none; border-radius: 8px; background: var(--primary); color: #fff; transition: background-color .2s ease, transform .1s ease; }
+  .btn:hover { background: var(--primary-dark); }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { background: #d6cee8; cursor: not-allowed; }
+
+  #evidence { margin-top: 14px; }
+  .ev-head { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+  .pill { border-radius: 999px; padding: 3px 12px; font-size: 12px; font-weight: 600; }
+  .pill.ok { background: #e6f4ea; color: var(--ok); border: 1px solid #b7dfc2; }
+  .pill.err { background: #fdeeee; color: var(--err); border: 1px solid #f3c0c0; }
+  .pill.ext { background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); }
+  .meta-line { font-size: 12px; color: var(--muted); margin-top: 8px; line-height: 1.8; }
+  .w-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 14px; }
+  .w-card { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; background: #fbfaff; }
+  .w-card .label { font-size: 12px; color: var(--muted); }
+  .w-card .value { font-size: 22px; font-weight: 700; color: var(--primary-darker); margin-top: 4px; }
+  .w-card .unit { font-size: 13px; font-weight: 500; color: var(--primary-dark); margin-left: 2px; }
+  .err-box { margin-top: 14px; border: 1px solid #f3c0c0; background: #fdeeee; color: var(--err); border-radius: 10px; padding: 12px 14px; font-size: 13px; line-height: 1.8; }
+  details { margin-top: 12px; }
+  summary { cursor: pointer; font-size: 12px; color: var(--primary-darker); }
+  pre { font-size: 12px; background: #f7f4fb; border: 1px solid var(--border); border-radius: 8px; padding: 12px; white-space: pre-wrap; overflow-x: auto; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; }
+  #log { font-family: Consolas, monospace; font-size: 12px; color: #6b657f; background: #f7f4fb; border: 1px solid var(--border); border-radius: 8px; padding: 12px; height: 180px; overflow-y: auto; white-space: pre-wrap; word-break: break-all; line-height: 1.8; }
+  .log-ok { color: var(--ok); }
+  .log-err { color: var(--err); }
+  .log-info { color: #5e35b1; }
+  .foot { margin-top: 24px; font-size: 12px; color: var(--muted); }
+  .foot a { color: var(--primary-darker); }
+</style>
+</head>
+<body>
+<div class="main-card">
+  <h1>GreenMate B03 · 天气证据 <span class="badge">external_api · 真实 HTTP</span></h1>
+  <p class="tip">
+    每次查询都真实发起外部天气 API 请求（不写死 JSON），返回结构化的 weather_evidence（来源 / retrieved_at / status / error）。<br>
+    数据分层：<b>外部真实天气</b>（本页，独立库 weather_evidence.db）｜<b>本地模拟历史</b>（<a href="/B02" style="color:var(--primary-darker)">B02</a>，SIMULATED）｜<b>LLM 上下文状态</b>（<a href="/" style="color:var(--primary-darker)">B01</a>，内存）——三者互不混用。
+  </p>
+
+  <h2>1. 查询真实天气（location 可修改）</h2>
+  <div class="panel">
+    <div class="query-row">
+      <input type="text" id="location" value="北京" placeholder="城市名或 纬度,经度，如：上海 / 广州 / 39.9,116.4">
+      <select id="language">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+      <button class="btn" id="goBtn" onclick="fetchWeather()">获取天气证据</button>
+    </div>
+    <div id="evidence">（尚未查询）</div>
+  </div>
+
+  <h2>2. 外部证据历史（独立存储）</h2>
+  <div class="panel">
+    <table id="histTable">
+      <thead><tr><th>时间</th><th>location</th><th>provider</th><th>status</th><th>温度</th><th>天气</th><th>耗时</th><th>错误</th></tr></thead>
+      <tbody><tr><td colspan="8">（加载中…）</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>3. 页面日志</h2>
+  <div class="panel"><div id="log"></div></div>
+
+  <div class="foot">README / 测试（TestA 改查询条件、TestB 只改参数、异常注入）见 B03/ 目录</div>
+</div>
+
+<script>
+var $ = function (id) { return document.getElementById(id); };
+
+function log(msg, level) {
+  var time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
+  var cls = level === "ok" ? "log-ok" : (level === "err" ? "log-err" : "log-info");
+  var div = document.createElement("div");
+  div.innerHTML = "[" + time + "] <span class=\"" + cls + "\">" + escapeHtml(msg) + "</span>";
+  $("log").appendChild(div);
+  $("log").scrollTop = $("log").scrollHeight;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+async function fetchWeather() {
+  var location = $("location").value.trim();
+  if (!location) { log("location 不能为空", "err"); return; }
+  var lang = $("language").value;
+  log("查询真实天气：location=" + location + " language=" + lang);
+  $("goBtn").disabled = true;
+  $("evidence").innerHTML = "请求中…（真实 HTTP 调用外部 API）";
+  try {
+    var res = await fetch("/B03/api/weather?location=" + encodeURIComponent(location) + "&language=" + encodeURIComponent(lang));
+    var ev = await res.json();
+    if (!res.ok) { throw new Error(ev.detail || ("HTTP " + res.status)); }
+    renderEvidence(ev);
+    log("证据已生成 [" + ev.status + "] " + (ev.status === "success"
+      ? (ev.weather.temperature_c + "℃ " + ev.weather.weather_text)
+      : (ev.error.error_type + ": " + ev.error.message)), ev.status === "success" ? "ok" : "err");
+  } catch (e) {
+    $("evidence").innerHTML = '<div class="err-box">请求异常：' + escapeHtml(e.message || e) + "</div>";
+    log("请求异常: " + (e.message || e), "err");
+  } finally {
+    $("goBtn").disabled = false;
+    loadHistory();
+  }
+}
+
+function renderEvidence(ev) {
+  var head = '<div class="ev-head">' +
+    (ev.status === "success"
+      ? '<span class="pill ok">status: success</span>'
+      : '<span class="pill err">status: error</span>') +
+    '<span class="pill ext">data_source: ' + escapeHtml(ev.data_source) + '</span>' +
+    '<span class="pill ext">provider: ' + escapeHtml(ev.provider) + '</span>' +
+    '</div>';
+  var meta = '<div class="meta-line">查询条件: ' + escapeHtml(ev.query.location) +
+    ' | retrieved_at: ' + escapeHtml(ev.retrieved_at) +
+    ' | 耗时: ' + (ev.latency_ms != null ? ev.latency_ms + "ms" : "—") +
+    (ev.resolved ? ' | 解析地点: ' + escapeHtml(ev.resolved.name || JSON.stringify(ev.resolved)) : "") +
+    '</div>';
+  var body = "";
+  if (ev.status === "success") {
+    var w = ev.weather;
+    body = '<div class="w-grid">' +
+      wcard("温度", w.temperature_c, "°C") +
+      wcard("湿度", w.humidity_pct, "%") +
+      wcard("天气", w.weather_text, "code " + w.weather_code) +
+      wcard("风速", w.wind_speed_kph, "km/h") +
+      '</div>' +
+      '<details><summary>API 原始响应（真实返回，可审计）</summary><pre>' +
+      escapeHtml(ev.api_url || "") + "\n\n" + escapeHtml(ev.raw_response || "") + "</pre></details>";
+  } else {
+    body = '<div class="err-box"><b>error_type:</b> ' + escapeHtml(ev.error.error_type) +
+      '<br><b>message:</b> ' + escapeHtml(ev.error.message) +
+      (ev.error.http_status ? '<br><b>HTTP:</b> ' + ev.error.http_status : "") +
+      (ev.error.detail ? '<br><b>detail:</b> ' + escapeHtml(ev.error.detail) : "") +
+      '</div>';
+  }
+  $("evidence").innerHTML = head + meta + body;
+}
+
+function wcard(label, value, unit) {
+  return '<div class="w-card"><div class="label">' + label + '</div>' +
+    '<div class="value">' + value + '<span class="unit">' + unit + '</span></div></div>';
+}
+
+async function loadHistory() {
+  try {
+    var res = await fetch("/B03/api/evidence?limit=20");
+    var data = await res.json();
+    if (!res.ok) { throw new Error(data.detail || ("HTTP " + res.status)); }
+    var rows = data.items.map(function (r) {
+      return "<tr><td>" + escapeHtml(r.retrieved_at) + "</td><td>" + escapeHtml(r.location) + "</td>" +
+        "<td>" + escapeHtml(r.provider) + "</td>" +
+        "<td>" + (r.status === "success" ? '<span style="color:#1b7a3d">success</span>' : '<span style="color:#c62828">error</span>') + "</td>" +
+        "<td>" + (r.temperature != null ? r.temperature + "℃" : "—") + "</td>" +
+        "<td>" + escapeHtml(r.weather_text || "—") + "</td>" +
+        "<td>" + (r.latency_ms != null ? r.latency_ms + "ms" : "—") + "</td>" +
+        "<td>" + escapeHtml(r.error_type || "—") + "</td></tr>";
+    }).join("");
+    $("histTable").querySelector("tbody").innerHTML = rows || '<tr><td colspan="8">（暂无记录）</td></tr>';
+  } catch (e) {
+    log("历史加载失败: " + (e.message || e), "err");
+  }
+}
+
+$("location").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { fetchWeather(); } });
+
+loadHistory();
+log("B03 就绪：外部真实天气证据（external_api），与本地模拟历史分离");
+</script>
+</body>
+</html>

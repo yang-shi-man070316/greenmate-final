@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate B05 — 工具智能体（真实工具调用闭环）</title>
+<style>
+  :root {
+    --primary: #b39ddb; --primary-dark: #9575cd; --primary-darker: #7e57c2;
+    --bg: #f3effa; --card: #ffffff; --border: #e3ddf0; --text: #332f3d; --muted: #8a8498;
+    --ok: #1b7a3d; --err: #c62828; --warn: #b26a00;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 32px 16px; display: flex; justify-content: center; }
+  .main-card { width: 100%; max-width: 1000px; background: var(--card); border-radius: 16px; box-shadow: 0 8px 28px rgba(94,74,138,0.10), 0 2px 6px rgba(0,0,0,0.04); padding: 30px 34px 26px; }
+  h1 { font-size: 22px; margin: 0 0 6px; color: var(--primary-darker); }
+  .badge { display: inline-block; font-size: 12px; font-weight: normal; background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); border-radius: 999px; padding: 2px 10px; vertical-align: middle; margin-left: 6px; }
+  .tip { font-size: 12px; color: var(--muted); margin: 0 0 8px; line-height: 1.7; }
+  h2 { font-size: 15px; margin: 28px 0 14px; color: var(--primary-darker); border-left: 4px solid var(--primary); padding-left: 10px; }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff; padding: 18px 20px; }
+
+  .state-cards { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
+  .state-card { flex: 1; min-width: 200px; border: 2px solid var(--border); border-radius: 12px; padding: 12px 16px; cursor: pointer; transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+  .state-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .state-card.active { border-color: var(--primary-dark); background: #f7f3fc; }
+  .state-card .name { font-weight: 600; font-size: 13px; color: var(--primary-darker); }
+  .state-card .val { font-size: 13px; margin-top: 4px; }
+  .state-card .src { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .state-bar { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .state-bar b { color: var(--primary-darker); }
+  .query-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  input[type=text] { flex: 1; min-width: 260px; padding: 10px 14px; font-size: 14px; border: 1px solid var(--border); border-radius: 8px; outline: none; transition: border-color .2s ease, box-shadow .2s ease; }
+  input[type=text]:focus { border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(179,157,219,0.25); }
+  .btn { padding: 9px 18px; font-size: 13px; cursor: pointer; border: 1px solid var(--primary); border-radius: 8px; background: #fff; color: var(--primary-darker); transition: all .2s ease; }
+  .btn:hover { background: var(--primary); color: #fff; }
+  .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn.primary:hover { background: var(--primary-dark); }
+  .btn.primary:disabled { background: #d6cee8; cursor: not-allowed; }
+  .presets { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .presets .btn { border-color: var(--border); color: var(--muted); }
+
+  .tool-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tool-chip { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-size: 12px; background: #fbfaff; }
+  .tool-chip b { color: var(--primary-darker); }
+
+  .step { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-top: 12px; background: #fbfaff; }
+  .step .round { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .line { font-size: 13px; line-height: 1.8; word-break: break-all; }
+  .tag { display: inline-block; border-radius: 999px; padding: 1px 10px; font-size: 12px; font-weight: 600; margin-right: 6px; }
+  .tag.call { background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); }
+  .tag.exec { background: #e8f1fb; color: #1565c0; border: 1px solid #c4ddf5; }
+  .tag.ok { background: #e6f4ea; color: var(--ok); border: 1px solid #b7dfc2; }
+  .tag.unavailable { background: #fdf3e0; color: var(--warn); border: 1px solid #eed9a8; }
+  .tag.err { background: #fdeeee; color: var(--err); border: 1px solid #f3c0c0; }
+  pre.mini { margin: 8px 0 0; font-size: 12px; background: #f7f4fb; border: 1px solid var(--border); border-radius: 8px; padding: 10px; white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow-y: auto; }
+
+  #answer { margin-top: 14px; min-height: 48px; font-size: 14px; line-height: 1.8; }
+  #answer.error { color: var(--err); }
+  /* LLM 回答按 Markdown 渲染后的排版 */
+  #answer h1, #answer h2, #answer h3, #answer h4 { font-size: 15px; margin: 12px 0 6px; color: var(--primary-darker); }
+  #answer h1 { font-size: 16px; }
+  #answer p { margin: 6px 0; }
+  #answer ul, #answer ol { margin: 6px 0; padding-left: 24px; }
+  #answer li { margin: 3px 0; }
+  #answer table { border-collapse: collapse; margin: 10px 0; }
+  #answer th, #answer td { border: 1px solid var(--border); padding: 4px 12px; font-size: 13px; text-align: left; }
+  #answer th { background: #f7f4fb; }
+  #answer code { background: #f7f4fb; border-radius: 4px; padding: 0 4px; font-size: 13px; }
+  #answer blockquote { margin: 8px 0; padding: 2px 12px; border-left: 3px solid var(--primary); color: var(--muted); }
+  #answerMeta { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .foot { margin-top: 24px; font-size: 12px; color: var(--muted); }
+  .foot a { color: var(--primary-darker); }
+</style>
+</head>
+<body>
+<div class="main-card">
+  <h1>GreenMate B05 · 工具智能体 <span class="badge">真实 tool calling 闭环</span></h1>
+  <p class="tip">
+    LLM 自主选择工具（顺序不写死）→ 后端<b>真实执行</b>函数 → tool_result 回填 → LLM 继续调用或输出最终回答。<br>
+    工具返回统一结构 {status: ok | unavailable | error, source, provider, retrieved_at, data?, error?}；失败时明确说明证据缺失，不编造。
+  </p>
+
+  <h2>1. 环境状态（点击切换，与 Agent 工具同源）</h2>
+  <div class="panel">
+    <div class="state-cards" id="stateCards"></div>
+    <div class="state-bar" id="stateBar"></div>
+    <div class="tool-row" id="toolRow"></div>
+  </div>
+
+  <h2>2. 任务输入</h2>
+  <div class="panel">
+    <div class="query-row">
+      <input type="text" id="task" value="帮我查看当前环境状态">
+      <button class="btn primary" id="goBtn" onclick="runAgent()">执行 Agent</button>
+    </div>
+    <div class="presets">
+      <button class="btn" onclick="useTask('帮我查看当前环境状态')">TestA 单工具：查当前环境</button>
+      <button class="btn" onclick="useTask('帮我查最近24小时的环境历史、南京的天气，再给出高温低湿环境下的养护建议')">TestB 多工具</button>
+      <button class="btn" onclick="useTask('查询最近 -5 小时的环境历史')">No-source：负数 hours</button>
+      <button class="btn" onclick="useTask('查一下不存在的地方 火星城市 的天气')">No-source：不存在地名</button>
+      <button class="btn" onclick="useTask('检索知识库：火星土壤的 pH 值是多少')">No-source：知识库无匹配</button>
+    </div>
+  </div>
+
+  <h2>3. 调用链路（tool_call → execute → tool_result）</h2>
+  <div class="panel" id="stepsBox">（执行后显示）</div>
+
+  <h2>4. 最终回答</h2>
+  <div class="panel">
+    <div id="answer">（尚未执行）</div>
+    <div id="answerMeta"></div>
+  </div>
+
+  <div class="foot">验收测试：B05/tests/（test_tools 无需密钥；TestA/TestB/No-source 需 LLM_API_KEY） · <a href="/B04">B04</a> · <a href="/">B01</a></div>
+</div>
+
+<script src="/B05/static/marked.min.js"></script>
+<script src="/B05/static/purify.min.js"></script>
+<script>
+var $ = function (id) { return document.getElementById(id); };
+
+/* LLM 回答是 Markdown：渲染为排版后的 HTML（经 DOMPurify 消毒），# 和 * 不再原样出现 */
+function renderAnswer(text) {
+  var el = $("answer");
+  if (window.marked && window.DOMPurify) {
+    el.innerHTML = DOMPurify.sanitize(marked.parse(text || ""));
+  } else {
+    el.textContent = text || "";
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+function statusTag(s) {
+  if (s === "ok") { return '<span class="tag ok">status: ok</span>'; }
+  if (s === "unavailable") { return '<span class="tag unavailable">status: unavailable</span>'; }
+  return '<span class="tag err">status: ' + escapeHtml(s) + '</span>';
+}
+
+var currentState = null;
+
+async function loadMeta() {
+  try {
+    var sd = await (await fetch("/B05/api/states")).json();
+    currentState = sd.states.find(function (s) { return s.state_id === sd.current_state_id; });
+    renderStates(sd.states);
+    var tl = await (await fetch("/B05/api/tools")).json();
+    $("toolRow").innerHTML = tl.tools.map(function (t) {
+      return '<div class="tool-chip"><b>' + t.name + '</b><br>' + escapeHtml(t.description) + '</div>';
+    }).join("");
+  } catch (e) {
+    $("stateCards").textContent = "加载失败：" + (e.message || e);
+  }
+}
+
+function renderStates(states) {
+  $("stateCards").innerHTML = states.map(function (s) {
+    var active = currentState && s.state_id === currentState.state_id ? " active" : "";
+    return '<div class="state-card' + active + '" onclick="switchState(\'' + s.state_id + '\')">' +
+      '<div class="name">' + escapeHtml(s.label || s.state_id) + '</div>' +
+      '<div class="val">' + s.temperature + s.temperature_unit + " / " +
+        s.humidity + s.humidity_unit + " / " + s.light + s.light_unit + "</div>" +
+      '<div class="src">' + s.source_type + " · 切换后 Agent 工具立即读到新状态</div>" +
+      "</div>";
+  }).join("");
+  $("stateBar").innerHTML = "当前服务端状态：<b>" + (currentState ? currentState.state_id : "—") + "</b>";
+}
+
+async function switchState(id) {
+  try {
+    var res = await fetch("/B05/api/state/switch", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ state_id: id })
+    });
+    if (!res.ok) {
+      var d = await res.json().catch(function () { return {}; });
+      throw new Error(d.detail || ("HTTP " + res.status));
+    }
+    currentState = await res.json();
+    var sd = await (await fetch("/B05/api/states")).json();
+    renderStates(sd.states);
+  } catch (e) {
+    $("stateBar").textContent = "切换失败：" + (e.message || e);
+  }
+}
+
+function useTask(text) {
+  $("task").value = text;
+  runAgent();
+}
+
+async function runAgent() {
+  var task = $("task").value.trim();
+  if (!task) { return; }
+  $("goBtn").disabled = true;
+  $("stepsBox").innerHTML = "Agent 执行中（LLM 自主决策 + 真实执行工具）…";
+  $("answer").textContent = "执行中…";
+  $("answer").classList.remove("error");
+  try {
+    var res = await fetch("/B05/api/agent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task: task })
+    });
+    var data = await res.json();
+    renderResult(data);
+  } catch (e) {
+    $("answer").textContent = "请求异常：" + (e.message || e);
+    $("answer").classList.add("error");
+    $("stepsBox").innerHTML = "";
+  } finally {
+    $("goBtn").disabled = false;
+  }
+}
+
+function renderResult(data) {
+  if (data.status === "error") {
+    $("answer").textContent = "Agent 失败（" + (data.error_type || "") + "）：" +
+      (data.message || JSON.stringify(data)) + (data.detail ? "\n" + data.detail : "");
+    $("answer").classList.add("error");
+    $("answerMeta").textContent = "";
+    $("stepsBox").innerHTML = "";
+    return;
+  }
+  if (!data.steps || !data.steps.length) {
+    $("stepsBox").innerHTML = '<div class="line">本轮没有工具调用（LLM 直接回答）</div>';
+  } else {
+    $("stepsBox").innerHTML = data.steps.map(function (s) {
+      var result = s.tool_result || {};
+      var callLine = '<div class="line"><span class="tag call">tool_call</span> ' +
+        escapeHtml(s.tool_call.name) + "(" + escapeHtml(JSON.stringify(s.tool_call.arguments)) + ")</div>";
+      var execLine = '<div class="line"><span class="tag exec">execute</span> ' +
+        (s.execution.real ? "真实执行函数 ✓ 耗时 " + s.execution.elapsed_ms + "ms" : "参数解析失败 " + escapeHtml(s.execution.error || "")) + "</div>";
+      var resHead = '<div class="line">' + statusTag(result.status) +
+        '<span class="tag exec">source: ' + escapeHtml(result.source || "—") + "</span>" +
+        '<span class="tag exec">provider: ' + escapeHtml(result.provider || "—") + "</span>" +
+        '<span class="tag exec">retrieved_at: ' + escapeHtml(result.retrieved_at || "—") + "</span></div>";
+      var resBody = '<pre class="mini">' +
+        escapeHtml(JSON.stringify(result.data || result.error || {}, null, 2)) + "</pre>";
+      return '<div class="step"><div class="round">Round ' + s.iteration + "</div>" +
+        callLine + execLine + resHead + resBody + "</div>";
+    }).join("");
+  }
+  $("answer").classList.remove("error");
+  renderAnswer(data.answer || data.message || "（无回答）");
+  $("answerMeta").textContent = "Agent status: " + data.status + " | 调用轮数: " +
+    (data.iterations || 0) + " | 工具调用次数: " + (data.steps ? data.steps.length : 0) +
+    " | model: " + (data.model || "—");
+}
+
+$("task").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { runAgent(); } });
+loadMeta();
+</script>
+</body>
+</html>

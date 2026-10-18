@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate B02 — 数据记忆（SQLite 持久化历史数据）</title>
+<style>
+  :root {
+    --primary: #b39ddb;
+    --primary-dark: #9575cd;
+    --primary-darker: #7e57c2;
+    --bg: #f3effa;
+    --card: #ffffff;
+    --border: #e3ddf0;
+    --text: #332f3d;
+    --muted: #8a8498;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: system-ui, "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 32px 16px;
+    display: flex;
+    justify-content: center;
+  }
+  .main-card {
+    width: 100%;
+    max-width: 1020px;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(94, 74, 138, 0.10), 0 2px 6px rgba(0, 0, 0, 0.04);
+    padding: 30px 34px 26px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; color: var(--primary-darker); }
+  .badge {
+    display: inline-block; font-size: 12px; font-weight: normal;
+    background: var(--bg); color: var(--primary-darker);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 2px 10px; vertical-align: middle; margin-left: 6px;
+  }
+  .tip { font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+  h2 {
+    font-size: 15px; margin: 28px 0 14px; color: var(--primary-darker);
+    border-left: 4px solid var(--primary); padding-left: 10px;
+  }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff; padding: 18px 20px; }
+
+  /* 元信息 */
+  #metaBar { display: flex; gap: 26px; flex-wrap: wrap; font-size: 13px; }
+  #metaBar .item .k { color: var(--muted); margin-right: 6px; }
+  #metaBar .item .v { font-weight: 600; color: var(--primary-darker); }
+
+  /* 时间窗口 */
+  .window-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .window-row input[type=datetime-local] {
+    padding: 8px 10px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .window-row input[type=datetime-local]:focus {
+    border-color: var(--primary-dark); box-shadow: 0 0 0 3px rgba(179, 157, 219, 0.25);
+  }
+  .btn {
+    padding: 8px 18px; font-size: 13px; cursor: pointer; border: 1px solid var(--primary);
+    border-radius: 8px; background: #ffffff; color: var(--primary-darker);
+    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .btn:hover { background: var(--primary); color: #fff; border-color: var(--primary-dark); }
+  .btn.primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn.primary:hover { background: var(--primary-dark); border-color: var(--primary-darker); }
+
+  /* 统计卡片 */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .stat-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: #fbfaff; }
+  .stat-card .field { font-size: 13px; color: var(--primary-darker); font-weight: 600; margin-bottom: 8px; }
+  .stat-card .row { font-size: 13px; line-height: 1.9; color: var(--text); }
+  .stat-card .row .k { color: var(--muted); margin-right: 6px; }
+  .stat-card .trend { font-size: 13px; margin-top: 6px; }
+  .up { color: #d84315; }
+  .down { color: #1565c0; }
+  .flat { color: var(--muted); }
+
+  /* 图表 */
+  #chartBox { position: relative; width: 100%; height: 380px; }
+
+  /* 扰动表 */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-weight: 500; }
+  td .tag {
+    display: inline-block; font-size: 12px; background: var(--bg); color: var(--primary-darker);
+    border-radius: 999px; padding: 1px 10px;
+  }
+
+  #status { font-size: 13px; color: #c62828; min-height: 18px; margin-top: 10px; }
+  .foot { margin-top: 24px; font-size: 12px; color: var(--muted); }
+  .foot a { color: var(--primary-darker); }
+</style>
+</head>
+<body>
+<div class="main-card">
+  <h1>GreenMate B02 · 数据记忆 <span class="badge">SQLite 持久化</span></h1>
+  <p class="tip">7 天 × 30 分钟 = 336 个采样点的模拟环境历史数据，写入 SQLite；程序重启后记录仍然存在。</p>
+
+  <h2>1. 数据集元信息</h2>
+  <div class="panel" id="metaBar">（加载中…）</div>
+
+  <h2>2. 时间窗口查询</h2>
+  <div class="panel">
+    <div class="window-row">
+      <button class="btn" onclick="presetWindow(24)">最近 24 小时</button>
+      <button class="btn" onclick="presetWindow(72)">最近 3 天</button>
+      <button class="btn" onclick="presetWindow(0)">全部（7 天）</button>
+      <span style="color:var(--muted);font-size:13px;margin-left:8px;">自定义：</span>
+      <input type="datetime-local" id="inStart" step="1800">
+      <span style="color:var(--muted);">至</span>
+      <input type="datetime-local" id="inEnd" step="1800">
+      <button class="btn primary" onclick="applyWindow()">应用窗口</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <h2>3. 统计与趋势</h2>
+  <div class="stat-grid" id="statGrid">（选择时间窗口后显示）</div>
+
+  <h2>4. 时序曲线（Chart.js）</h2>
+  <div class="panel">
+    <div id="chartBox"><canvas id="chart"></canvas></div>
+  </div>
+
+  <h2>5. 扰动清单（模拟器元数据，不是标签）</h2>
+  <div class="panel">
+    <table id="distTable">
+      <thead><tr><th>ID</th><th>类型</th><th>开始</th><th>结束</th><th>描述</th></tr></thead>
+      <tbody><tr><td colspan="5">（加载中…）</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="foot">数据资产说明见 B02/README.md 与 B02/docs/SCHEMA.md（后续 B06 可复用做时间窗口切分） · <a href="/">返回 B01</a></div>
+</div>
+
+<script src="/B02/static/chart.umd.min.js"></script>
+<script>
+var $ = function (id) { return document.getElementById(id); };
+
+var META = null;
+var SAMPLES = [];
+var CHART = null;
+
+function setStatus(msg) { $("status").textContent = msg || ""; }
+
+/* ---- 时间格式工具（存储格式 'YYYY-MM-DD HH:MM:SS'） ---- */
+function fmtShort(ts) { return ts.slice(5, 16); }                       // 'MM-DD HH:mm'
+function toLocalInput(ts) { return ts.slice(0, 16).replace(" ", "T"); } // datetime-local 值
+function fromLocalInput(v) { return v.replace("T", " ") + ":00"; }      // 查询参数
+
+/* ---- 元信息 ---- */
+async function loadMeta() {
+  try {
+    var res = await fetch("/B02/api/meta");
+    var data = await res.json();
+    if (!res.ok) { throw new Error(data.detail || ("HTTP " + res.status)); }
+    META = data;
+    $("metaBar").innerHTML = [
+      item("样本总数", data.actual_total + " 条"),
+      item("采样间隔", data.sample_interval_minutes + " 分钟"),
+      item("时间范围", data.first_timestamp + " ~ " + data.last_timestamp),
+      item("数据源", data.source_type),
+      item("扰动片段", data.disturbance_count + " 个"),
+      item("数据库", data.db_path)
+    ].join("");
+    $("inStart").value = toLocalInput(data.first_timestamp);
+    $("inEnd").value = toLocalInput(data.last_timestamp);
+    setStatus("");
+  } catch (e) {
+    $("metaBar").textContent = "加载元信息失败：" + (e.message || e);
+    setStatus("请确认数据库已生成：python B02/generate.py");
+  }
+}
+
+function item(k, v) {
+  return '<div class="item"><span class="k">' + k + '：</span><span class="v">' + v + '</span></div>';
+}
+
+/* ---- 时间窗口 ---- */
+function presetWindow(hours) {
+  if (!META) { return; }
+  if (hours === 0) {
+    $("inStart").value = toLocalInput(META.first_timestamp);
+    $("inEnd").value = toLocalInput(META.last_timestamp);
+  } else {
+    var end = new Date(META.last_timestamp.replace(" ", "T"));
+    var start = new Date(end.getTime() - hours * 3600 * 1000);
+    $("inEnd").value = toLocalInput(META.last_timestamp);
+    $("inStart").value = toLocalInput(tsOf(start));
+  }
+  applyWindow();
+}
+
+function tsOf(d) {
+  var p = function (n) { return (n < 10 ? "0" : "") + n; };
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) + " " +
+         p(d.getHours()) + ":" + p(d.getMinutes()) + ":00";
+}
+
+async function applyWindow() {
+  var params = new URLSearchParams();
+  if ($("inStart").value) { params.set("start", fromLocalInput($("inStart").value)); }
+  if ($("inEnd").value) { params.set("end", fromLocalInput($("inEnd").value)); }
+  setStatus("");
+  await loadStats(params.toString());
+  await loadSeries(params.toString());
+}
+
+/* ---- 统计 ---- */
+async function loadStats(qs) {
+  try {
+    var res = await fetch("/B02/api/stats?" + qs);
+    var data = await res.json();
+    if (!res.ok) { throw new Error(data.detail || ("HTTP " + res.status)); }
+    if (!data.count) { $("statGrid").textContent = "时间窗口内无数据"; return; }
+    renderStats(data);
+  } catch (e) {
+    setStatus("统计加载失败：" + (e.message || e));
+  }
+}
+
+function renderStats(data) {
+  var names = { temperature: "温度", humidity: "湿度", light: "光照" };
+  var units = { temperature: "°C", humidity: "%", light: "lux" };
+  var arrows = { "上升": '<span class="up">↑ 上升</span>', "下降": '<span class="down">↓ 下降</span>', "平稳": '<span class="flat">→ 平稳</span>' };
+  var html = '<div class="stat-card"><div class="field">窗口概况</div>' +
+    '<div class="row"><span class="k">样本数：</span>' + data.count + '</div>' +
+    '<div class="row"><span class="k">窗口：</span>' + fmtShort(data.window.start) + ' ~ ' + fmtShort(data.window.end) + '</div></div>';
+  Object.keys(names).forEach(function (f) {
+    var s = data.fields[f];
+    var t = data.trend[f];
+    html += '<div class="stat-card"><div class="field">' + names[f] + '（' + units[f] + '）</div>' +
+      '<div class="row"><span class="k">范围：</span>' + s.min + ' ~ ' + s.max + '</div>' +
+      '<div class="row"><span class="k">均值：</span>' + s.avg + '</div>' +
+      '<div class="trend">趋势：' + (t && t.direction ? arrows[t.direction] + '（' + t.head_avg + ' → ' + t.tail_avg + '）' : '—') + '</div></div>';
+  });
+  $("statGrid").innerHTML = html;
+}
+
+/* ---- 时序曲线 ---- */
+async function loadSeries(qs) {
+  try {
+    var res = await fetch("/B02/api/series?" + qs);
+    var data = await res.json();
+    if (!res.ok) { throw new Error(data.detail || ("HTTP " + res.status)); }
+    SAMPLES = data.samples;
+    drawChart();
+  } catch (e) {
+    setStatus("曲线加载失败：" + (e.message || e));
+  }
+}
+
+function drawChart() {
+  var labels = SAMPLES.map(function (s) { return fmtShort(s.timestamp); });
+  var ctx = $("chart").getContext("2d");
+  if (!CHART) {
+    CHART = new Chart(ctx, {
+      type: "line",
+      data: { labels: labels, datasets: [
+        { label: "温度 (°C)", data: [], borderColor: "#7e57c2", backgroundColor: "rgba(126,87,194,0.08)", yAxisID: "y", tension: 0.3, pointRadius: 0, borderWidth: 2, fill: true },
+        { label: "湿度 (%)", data: [], borderColor: "#42a5f5", yAxisID: "y", tension: 0.3, pointRadius: 0, borderWidth: 2 },
+        { label: "光照 (lux)", data: [], borderColor: "#ffb300", yAxisID: "y1", tension: 0.3, pointRadius: 0, borderWidth: 2 }
+      ] },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: "index", intersect: false },
+        plugins: {
+          legend: { labels: { color: "#6b657f", usePointStyle: true } },
+          tooltip: { callbacks: {
+            title: function (items) { return SAMPLES[items[0].dataIndex].timestamp; },
+            afterLabel: function (item) { return "scenario: " + SAMPLES[item.dataIndex].sim_scenario; }
+          } }
+        },
+        scales: {
+          x: { ticks: { maxTicksLimit: 12, color: "#8a8498" }, grid: { color: "#eee9f6" } },
+          y: { title: { display: true, text: "温度/湿度", color: "#8a8498" }, ticks: { color: "#8a8498" }, grid: { color: "#eee9f6" } },
+          y1: { position: "right", title: { display: true, text: "光照 (lux)", color: "#8a8498" }, ticks: { color: "#8a8498" }, grid: { drawOnChartArea: false } }
+        }
+      }
+    });
+  }
+  CHART.data.labels = labels;
+  CHART.data.datasets[0].data = SAMPLES.map(function (s) { return s.temperature; });
+  CHART.data.datasets[1].data = SAMPLES.map(function (s) { return s.humidity; });
+  CHART.data.datasets[2].data = SAMPLES.map(function (s) { return s.light; });
+  CHART.update();
+}
+
+/* ---- 扰动清单 ---- */
+async function loadDisturbances() {
+  try {
+    var res = await fetch("/B02/api/disturbances");
+    var data = await res.json();
+    if (!res.ok) { throw new Error(data.detail || ("HTTP " + res.status)); }
+    var rows = data.disturbances.map(function (d) {
+      return "<tr><td>" + d.id + "</td><td><span class=\"tag\">" + d.type + "</span></td>" +
+        "<td>" + d.start_ts + "</td><td>" + d.end_ts + "</td><td>" + d.description + "</td></tr>";
+    }).join("");
+    $("distTable").querySelector("tbody").innerHTML = rows ||
+      '<tr><td colspan="5">（无扰动记录）</td></tr>';
+  } catch (e) {
+    setStatus("扰动清单加载失败：" + (e.message || e));
+  }
+}
+
+/* ---- 启动 ---- */
+loadMeta();
+loadDisturbances();
+applyWindow();
+</script>
+</body>
+</html>

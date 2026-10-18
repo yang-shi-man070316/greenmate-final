@@ -1,0 +1,38 @@
+{
+  "prediction_type": "attention_prediction",
+  "output_marker": "MODEL_OUTPUT",
+  "predicted_attention": "NORMAL",
+  "probability": {
+    "NORMAL": 0.9996,
+    "WATCH": 0.0004
+  },
+  "model_version": "b06-rf-v1",
+  "trained_at": "2026-10-19 00:15:26",
+  "features_used": {
+    "temp_current": 14.3,
+    "hum_current": 73.5,
+    "light_current": 4.0,
+    "temp_mean": 14.47,
+    "hum_mean": 74.08,
+    "light_mean": 4.83,
+    "temp_delta": -0.7,
+    "hum_delta": 0.4
+  },
+  "feature_names": [
+    "temp_current",
+    "hum_current",
+    "light_current",
+    "temp_mean",
+    "hum_mean",
+    "light_mean",
+    "temp_delta",
+    "hum_delta"
+  ],
+  "input_window": {
+    "window_size": 6,
+    "start": "2026-10-14 01:00:00",
+    "end": "2026-10-14 03:30:00"
+  },
+  "uncertainty": "置信度 100.0%（基于历史 SIMULATED 数据训练）",
+  "applicability": "适用边界：仅适用于 B02 SIMULATED 模拟数据（30 分钟网格、同一模拟器规则）；本预测独立于 B03 外部天气证据与 B04 本地知识证据，三者不可混用；对超出训练分布的真实环境不具备泛化保证。"
+}

@@ -1,0 +1,120 @@
+{
+  "model_version": "b06-rf-v1",
+  "trained_at": "2026-10-19 00:15:26",
+  "window_size": 6,
+  "prediction_horizon": 4,
+  "feature_names": [
+    "temp_current",
+    "hum_current",
+    "light_current",
+    "temp_mean",
+    "hum_mean",
+    "light_mean",
+    "temp_delta",
+    "hum_delta"
+  ],
+  "dataset": {
+    "total_windows": 327,
+    "train_n": 231,
+    "test_n": 93,
+    "dropped_cross_boundary": 3,
+    "train_end_boundary": "2026-10-12 00:00:00",
+    "label_dist_train": {
+      "NORMAL": 194,
+      "WATCH": 37
+    },
+    "label_dist_test": {
+      "NORMAL": 68,
+      "WATCH": 25
+    }
+  },
+  "baseline_majority_class": "NORMAL",
+  "baseline_metrics": {
+    "confusion_matrix": {
+      "TN": 68,
+      "FP": 0,
+      "FN": 25,
+      "TP": 0,
+      "labels": [
+        "NORMAL",
+        "WATCH"
+      ]
+    },
+    "f1_macro": 0.4224,
+    "f1_weighted": 0.6176,
+    "recall_NORMAL": 1.0,
+    "recall_WATCH": 0.0
+  },
+  "ml_metrics": {
+    "confusion_matrix": {
+      "TN": 64,
+      "FP": 4,
+      "FN": 12,
+      "TP": 13,
+      "labels": [
+        "NORMAL",
+        "WATCH"
+      ]
+    },
+    "f1_macro": 0.754,
+    "f1_weighted": 0.8164,
+    "recall_NORMAL": 0.9412,
+    "recall_WATCH": 0.52
+  },
+  "feature_importances": {
+    "temp_current": 0.208,
+    "hum_current": 0.1851,
+    "light_current": 0.0653,
+    "temp_mean": 0.118,
+    "hum_mean": 0.1261,
+    "light_mean": 0.0863,
+    "temp_delta": 0.1103,
+    "hum_delta": 0.1008
+  },
+  "error_samples": [
+    {
+      "kind": "FP",
+      "true_label": "NORMAL",
+      "predicted_label": "WATCH",
+      "label_source": "",
+      "window": "2026-10-12 21:30:00 ~ 2026-10-13 00:00:00（预测窗口 2026-10-13 00:30:00 ~ 2026-10-13 02:00:00）",
+      "features": {
+        "temp_current": 16.3,
+        "hum_current": 69.8,
+        "light_current": 4.0,
+        "temp_mean": 20.72,
+        "hum_mean": 53.05,
+        "light_mean": 4.0,
+        "temp_delta": -7.6,
+        "hum_delta": 25.7
+      },
+      "model_proba": {
+        "NORMAL": 0.449,
+        "WATCH": 0.551
+      },
+      "explanation": "窗口内温度剧变（temp_delta=-7.6℃）；窗口内湿度剧变（hum_delta=25.7%）——扰动/恢复期的快速变化被模型识别为风险信号，但预测窗口实际已回归正常（假警报）"
+    },
+    {
+      "kind": "FN",
+      "true_label": "WATCH",
+      "predicted_label": "NORMAL",
+      "label_source": "hum_low",
+      "window": "2026-10-12 05:30:00 ~ 2026-10-12 08:00:00（预测窗口 2026-10-12 08:30:00 ~ 2026-10-12 10:00:00）",
+      "features": {
+        "temp_current": 23.3,
+        "hum_current": 47.9,
+        "light_current": 23305.0,
+        "temp_mean": 20.77,
+        "hum_mean": 50.72,
+        "light_mean": 9690.67,
+        "temp_delta": 4.8,
+        "hum_delta": -6.9
+      },
+      "model_proba": {
+        "NORMAL": 0.86,
+        "WATCH": 0.14
+      },
+      "explanation": "标签由规则触发（湿度 < 40%（干燥）），但输入窗口结束时湿度仍为 47.9%、温度 23.3℃（湿度呈下降趋势），恶化过程发生在预测窗口内，过去 3 小时的特征不足以让模型提前预警（漏报）"
+    }
+  ]
+}

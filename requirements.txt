@@ -1,0 +1,5 @@
+# GreenMate B01 deps (Python 3.8+; pip resolves versions compatible with the running Python)
+fastapi>=0.100,<1.0
+uvicorn>=0.23,<1.0
+openai>=1.30,<2.0
+python-dotenv>=1.0,<2.0

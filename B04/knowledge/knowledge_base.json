@@ -1,0 +1,72 @@
+{
+  "name": "greenmate_b04_knowledge_base",
+  "version": "1.0",
+  "description": "GreenMate 本地知识库：环境养护知识片段（仅本地资料，不联网）",
+  "note": "每段含 id / topic / keywords / content / source / scope；source 指向 knowledge/greenmate_care_guide.md 的章节标题",
+  "segments": [
+    {
+      "id": "K01",
+      "topic": "温度适宜范围",
+      "scope": "plant_care",
+      "keywords": ["温度", "℃", "适宜", "18-28", "24", "30", "高温", "低温", "寒冷"],
+      "content": "多数室内绿植适宜温度为 18–28℃，24℃ 左右最舒适；超过 30℃ 进入高温胁迫，超过 35℃ 叶片易卷曲灼伤；低于 10℃ 多数热带植物出现寒害。",
+      "source": "knowledge/greenmate_care_guide.md#温度管理"
+    },
+    {
+      "id": "K02",
+      "topic": "湿度适宜范围",
+      "scope": "plant_care",
+      "keywords": ["湿度", "%", "适宜", "45-65", "65", "30", "40", "干燥", "潮湿", "霉"],
+      "content": "多数室内绿植适宜相对湿度为 45%–65%；低于 30% 叶缘易干枯卷边，低于 40% 建议加湿；长期高于 85% 易诱发霉菌与根腐。",
+      "source": "knowledge/greenmate_care_guide.md#湿度管理"
+    },
+    {
+      "id": "K03",
+      "topic": "光照强度分级",
+      "scope": "plant_care",
+      "keywords": ["光照", "lux", "分级", "10000", "12000", "20000", "50000", "弱光", "强光", "中等"],
+      "content": "光照分级：2000–10000 lux 弱光（耐阴植物）；10000–20000 lux 中等光照（多数观叶植物，12000 lux 属此区间）；20000–50000 lux 强光，多数室内绿植长时间直射会灼伤。",
+      "source": "knowledge/greenmate_care_guide.md#光照管理"
+    },
+    {
+      "id": "K04",
+      "topic": "高温应对",
+      "scope": "plant_care",
+      "keywords": ["高温", "炎热", "热", "36", "35", "32", "30", "降温", "遮阴", "通风", "浇水", "施肥"],
+      "content": "温度达到 32℃ 及以上（如 36℃）时：遮阴或移离直射、加强通风、早晚凉爽时段浇水、暂停施肥；高温与低湿同时出现（如 36℃ + 35% 湿度）时还需配合加湿，避免蒸腾过快导致脱水。",
+      "source": "knowledge/greenmate_care_guide.md#高温应对"
+    },
+    {
+      "id": "K05",
+      "topic": "干燥应对",
+      "scope": "plant_care",
+      "keywords": ["干燥", "湿度低", "加湿", "喷雾", "加湿器", "35", "30", "40", "空调", "暖气"],
+      "content": "空气湿度低于 40%（如 35%）时：使用加湿器增湿、向叶面喷雾（避开正午）、花盆托盘垫水（盆底不接触水面）、避免空调或暖气直吹。",
+      "source": "knowledge/greenmate_care_guide.md#干燥应对"
+    },
+    {
+      "id": "K06",
+      "topic": "强光灼伤处理",
+      "scope": "plant_care",
+      "keywords": ["强光", "灼伤", "直射", "遮光", "22000", "20000", "黄褐", "光照过强"],
+      "content": "光照超过 20000 lux（如 22000 lux）长时间直射时，叶片易出现黄褐色灼伤斑：将植物移离直射位置、加装遮光网，或调整到 10000–20000 lux 的中等光照区。",
+      "source": "knowledge/greenmate_care_guide.md#光照过强"
+    },
+    {
+      "id": "K07",
+      "topic": "SIMULATED 数据源说明",
+      "scope": "device_guide",
+      "keywords": ["SIMULATED", "模拟", "数据源", "传感器", "模拟数据", "模拟器"],
+      "content": "GreenMate 的环境状态数据来自模拟数据源（source_type=SIMULATED），由模拟器按规则生成，不代表真实传感器读数；SIMULATED 数据可用于功能验证与流程演示，不可作为真实环境判断的最终依据。",
+      "source": "knowledge/greenmate_care_guide.md#设备说明"
+    },
+    {
+      "id": "K08",
+      "topic": "夜间光照异常排查",
+      "scope": "troubleshooting",
+      "keywords": ["夜间", "异常", "光照异常", "排查", "误触发", "补光灯", "1000", "100"],
+      "content": "夜间（19:00–次日 6:00）光照值通常应低于 100 lux；若夜间光照超过 1000 lux 属异常：优先检查环境内是否有其他光源（补光灯、屏显等），或设备是否存在误触发。",
+      "source": "knowledge/greenmate_care_guide.md#异常排查"
+    }
+  ]
+}
