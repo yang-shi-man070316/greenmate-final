@@ -171,11 +171,20 @@
   }
   #answer {
     min-height: 48px;
-    white-space: pre-wrap;
     font-size: 14px;
     line-height: 1.7;
   }
   #answer.error { color: var(--err); }
+  /* LLM 回答按 Markdown 渲染后的排版（# * - 不再原样出现） */
+  #answer h1, #answer h2, #answer h3, #answer h4 { font-size: 14px; margin: 10px 0 6px; color: var(--primary-darker); }
+  #answer p { margin: 6px 0; }
+  #answer ul, #answer ol { margin: 6px 0; padding-left: 22px; }
+  #answer li { margin: 3px 0; }
+  #answer table { border-collapse: collapse; margin: 8px 0; }
+  #answer th, #answer td { border: 1px solid var(--border); padding: 4px 10px; font-size: 13px; text-align: left; }
+  #answer th { background: #f7f4fb; }
+  #answer code { background: #f7f4fb; border-radius: 4px; padding: 0 4px; font-size: 13px; }
+  #answer strong { color: #4a3f63; }
   #answerMeta { font-size: 12px; color: var(--muted); margin-top: 10px; }
 
   details { margin-top: 12px; }
@@ -243,11 +252,23 @@
   </div>
 </div>
 
+<script src="/static/marked.min.js"></script>
+<script src="/static/purify.min.js"></script>
 <script>
 var $ = function (id) { return document.getElementById(id); };
 
 var statesList = [];
 var currentState = null;
+
+/* LLM 回答是 Markdown：渲染为排版后的 HTML（经 DOMPurify 消毒），# * - 不再原样出现 */
+function renderAnswer(text) {
+  var el = $("answer");
+  if (window.marked && window.DOMPurify) {
+    el.innerHTML = DOMPurify.sanitize(marked.parse(text || ""));
+  } else {
+    el.textContent = text || "";
+  }
+}
 
 function log(msg, level) {
   var time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
@@ -345,7 +366,7 @@ async function askQuestion() {
       log("失败 [HTTP " + res.status + "] " + (data.error_type || "") + ": " + (data.message || JSON.stringify(data)), "err");
       return;
     }
-    $("answer").textContent = data.answer;
+    renderAnswer(data.answer);
     $("answerMeta").textContent = "model: " + data.model + " | 耗时: " + data.elapsed_ms +
       "ms | AI 读取的状态（来自请求上下文）: " + stateText(data.state_used);
     $("ctx").textContent = JSON.stringify(data.messages_sent, null, 2);

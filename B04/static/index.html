@@ -48,8 +48,18 @@
   .pill.warn { background: #fdf3e0; color: var(--warn); border: 1px solid #eed9a8; }
   .pill.info { background: var(--bg); color: var(--primary-darker); border: 1px solid var(--border); }
 
-  #answer { margin-top: 14px; min-height: 48px; white-space: pre-wrap; font-size: 14px; line-height: 1.8; }
+  #answer { margin-top: 14px; min-height: 48px; font-size: 14px; line-height: 1.8; }
   #answer.error { color: var(--err); }
+  /* LLM 回答按 Markdown 渲染后的排版（# * - 不再原样出现） */
+  #answer h1, #answer h2, #answer h3, #answer h4 { font-size: 14px; margin: 10px 0 6px; color: var(--primary-darker); }
+  #answer p { margin: 6px 0; }
+  #answer ul, #answer ol { margin: 6px 0; padding-left: 22px; }
+  #answer li { margin: 3px 0; }
+  #answer table { border-collapse: collapse; margin: 8px 0; }
+  #answer th, #answer td { border: 1px solid var(--border); padding: 4px 10px; font-size: 13px; text-align: left; }
+  #answer th { background: #f7f4fb; }
+  #answer code { background: #f7f4fb; border-radius: 4px; padding: 0 4px; font-size: 13px; }
+  #answer strong { color: #4a3f63; }
   #answerMeta { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
   .ev-item { border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 10px; background: #fbfaff; }
@@ -115,9 +125,21 @@
   <div class="foot">本地知识库：B04/knowledge/（greenmate_care_guide.md 源文档 + knowledge_base.json 片段） · 测试见 B04/tests/ · <a href="/B03">B03</a> · <a href="/">B01</a></div>
 </div>
 
+<script src="/B04/static/marked.min.js"></script>
+<script src="/B04/static/purify.min.js"></script>
 <script>
 var $ = function (id) { return document.getElementById(id); };
 var currentState = null;
+
+/* LLM 回答是 Markdown：渲染为排版后的 HTML（经 DOMPurify 消毒），# * - 不再原样出现 */
+function renderAnswer(text) {
+  var el = $("answer");
+  if (window.marked && window.DOMPurify) {
+    el.innerHTML = DOMPurify.sanitize(marked.parse(text || ""));
+  } else {
+    el.textContent = text || "";
+  }
+}
 
 function log(msg, level) {
   var time = new Date().toLocaleTimeString("zh-CN", { hour12: false });
@@ -201,7 +223,8 @@ function renderChat(data) {
     $("answerMeta").textContent = "";
     return;
   }
-  $("answer").textContent = data.answer;
+  $("answer").classList.remove("error");
+  renderAnswer(data.answer);
   $("answerMeta").textContent = "model: " + data.model + " | 耗时: " + data.elapsed_ms + "ms | 检索query: " + data.retrieval_query;
   $("ctx").textContent = JSON.stringify(data.messages_sent, null, 2);
   $("ctxDetails").style.display = "block";

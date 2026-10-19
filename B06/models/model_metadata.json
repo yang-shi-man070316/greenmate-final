@@ -1,6 +1,6 @@
 {
   "model_version": "b06-rf-v1",
-  "trained_at": "2026-10-19 00:15:26",
+  "trained_at": "2026-10-20 01:03:11",
   "window_size": 6,
   "prediction_horizon": 4,
   "feature_names": [

@@ -33,6 +33,9 @@ def main():
     parser.add_argument("--fresh", action="store_true", help="清空数据库后重新生成")
     parser.add_argument("--append", type=float, metavar="HOURS", help="在库末尾追加 N 小时新样本")
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED, help="随机种子（默认 42）")
+    parser.add_argument("--end", type=str, default=None, metavar="'YYYY-MM-DD HH:MM'",
+                        help="时间轴终点（默认 2026-10-14 00:00；与 --fresh 配合使用。"
+                             "注意：更换时间轴后 B06 的固定数据集窗口需同步更新）")
     args = parser.parse_args()
 
     conn = db.connect()
@@ -59,10 +62,18 @@ def main():
                 conn.execute("DELETE FROM disturbance_events")
                 conn.commit()
                 print("[重建] 已清空旧数据")
-            rows = generate_timeline(end=DEFAULT_END, seed=args.seed)
+            end_dt = DEFAULT_END
+            if args.end:
+                try:
+                    end_dt = datetime.strptime(args.end, "%Y-%m-%d %H:%M")
+                except ValueError:
+                    print("[错误] --end 格式应为 'YYYY-MM-DD HH:MM'（如 2026-10-20 00:00）")
+                    sys.exit(1)
+            rows = generate_timeline(end=end_dt, seed=args.seed)
             db.insert_samples(conn, rows)
             db.insert_disturbances(conn, DISTURBANCES)
-            print("[生成] 采样间隔 %d 分钟 × 7 天 = %d 条，已写入并 commit" % (SAMPLE_INTERVAL_MINUTES, TOTAL_SAMPLES))
+            print("[生成] 采样间隔 %d 分钟 × 7 天 = %d 条，时间轴终点 %s，已写入并 commit"
+                  % (SAMPLE_INTERVAL_MINUTES, TOTAL_SAMPLES, end_dt.strftime("%Y-%m-%d %H:%M")))
 
         count = db.count_samples(conn)
         first = conn.execute("SELECT MIN(timestamp) AS t FROM environment_samples").fetchone()["t"]

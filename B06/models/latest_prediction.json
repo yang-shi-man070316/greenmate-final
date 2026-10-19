@@ -7,7 +7,7 @@
     "WATCH": 0.0004
   },
   "model_version": "b06-rf-v1",
-  "trained_at": "2026-10-19 00:15:26",
+  "trained_at": "2026-10-20 01:03:11",
   "features_used": {
     "temp_current": 14.3,
     "hum_current": 73.5,

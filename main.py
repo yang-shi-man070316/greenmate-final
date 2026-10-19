@@ -12,6 +12,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from llm import ask_llm
@@ -75,6 +76,10 @@ def chat(req: ChatRequest):
         code = ERROR_HTTP_CODES.get(result.get("error_type"), 502)
         return JSONResponse(status_code=code, content=result)
     return result
+
+
+# 静态资源（页面依赖的本地 JS 库，如 Markdown 渲染）
+app.mount("/static", StaticFiles(directory=str(Path(__file__).parent / "static")), name="b01_static")
 
 
 if __name__ == "__main__":
