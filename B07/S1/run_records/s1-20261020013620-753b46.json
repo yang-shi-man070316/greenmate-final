@@ -1,0 +1,196 @@
+{
+  "run_id": "s1-20261020013620-753b46",
+  "created_at": "2026-10-20 00:00:00",
+  "chain_status": "test",
+  "step1_current_environment": {
+    "status": "ok",
+    "source": "simulated_state",
+    "provider": "greenmate_states",
+    "retrieved_at": "2026-10-20 01:36:20",
+    "data": {
+      "state_id": "A",
+      "source_type": "SIMULATED",
+      "temperature": 24.0,
+      "temperature_unit": "°C",
+      "humidity": 65.0,
+      "humidity_unit": "%",
+      "light": 12000.0,
+      "light_unit": "lux"
+    }
+  },
+  "step2_recent_history_3h": {
+    "status": "ok",
+    "source": "simulated_history",
+    "provider": "greenmate_b02_db",
+    "retrieved_at": "2026-10-20 01:36:20",
+    "data": {
+      "hours": 3.0,
+      "count": 7,
+      "window_start": "2026-10-20 13:30:00",
+      "window_end": "2026-10-20 16:30:00",
+      "stats": {
+        "count": 7,
+        "window": {
+          "start": "2026-10-20 13:30:00",
+          "end": "2026-10-20 16:30:00"
+        },
+        "fields": {
+          "temperature": {
+            "min": 28.9,
+            "max": 30.4,
+            "avg": 29.7
+          },
+          "humidity": {
+            "min": 43.8,
+            "max": 47.0,
+            "avg": 45.4
+          },
+          "light": {
+            "min": 21595.0,
+            "max": 48823.0,
+            "avg": 37290.1
+          }
+        },
+        "trend": {
+          "note": "样本少于 24 个，不计算趋势"
+        }
+      },
+      "samples": [
+        {
+          "timestamp": "2026-10-20 13:30:00",
+          "temperature": 28.9,
+          "humidity": 47.0,
+          "light": 48823.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 14:00:00",
+          "temperature": 29.4,
+          "humidity": 43.8,
+          "light": 47061.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 14:30:00",
+          "temperature": 30.2,
+          "humidity": 45.7,
+          "light": 43293.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 15:00:00",
+          "temperature": 30.3,
+          "humidity": 45.5,
+          "light": 38417.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 15:30:00",
+          "temperature": 30.4,
+          "humidity": 45.9,
+          "light": 35261.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 16:00:00",
+          "temperature": 29.9,
+          "humidity": 44.2,
+          "light": 26581.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        },
+        {
+          "timestamp": "2026-10-20 16:30:00",
+          "temperature": 29.0,
+          "humidity": 45.4,
+          "light": 21595.0,
+          "source_type": "SIMULATED",
+          "sim_scenario": "normal"
+        }
+      ]
+    }
+  },
+  "step3_model_prediction": {
+    "predicted_attention": "NORMAL",
+    "model_version": "b06-rf-v1",
+    "probability": {
+      "NORMAL": 0.99,
+      "WATCH": 0.01
+    }
+  },
+  "step4_structured_judgment": {
+    "judgment_type": "structured_judgment",
+    "generated_at": "2026-10-20 01:36:20",
+    "verdict": "attention",
+    "current_state": {
+      "status": "ok",
+      "source": "simulated_state",
+      "provider": "greenmate_states",
+      "retrieved_at": "2026-10-20 01:36:20",
+      "data": {
+        "state_id": "A",
+        "source_type": "SIMULATED",
+        "temperature": 24.0,
+        "temperature_unit": "°C",
+        "humidity": 65.0,
+        "humidity_unit": "%",
+        "light": 12000.0,
+        "light_unit": "lux"
+      }
+    },
+    "recent_trend": {
+      "available": true,
+      "count": 7,
+      "window": "2026-10-20 13:30:00 ~ 2026-10-20 16:30:00",
+      "temperature": {
+        "min": 28.9,
+        "max": 30.4,
+        "mean": 29.7,
+        "half_diff": 10.37
+      },
+      "humidity": {
+        "min": 43.8,
+        "max": 47.0,
+        "mean": 45.4,
+        "half_diff": 14.83
+      },
+      "light": {
+        "min": 21595.0,
+        "max": 48823.0,
+        "mean": 37290.1,
+        "half_diff": -5774.33
+      },
+      "data_stable": false,
+      "sim_scenarios": [
+        "normal"
+      ]
+    },
+    "predicted_attention": "NORMAL",
+    "model_version": "b06-rf-v1",
+    "model_output_modified": false,
+    "model_disagreement_note": null,
+    "evidence_status": {
+      "current_env_source": "simulated_state",
+      "history_source": "simulated_history",
+      "history_status": "ok",
+      "history_sample_count": 7,
+      "prediction_source": "B06 RandomForest（已训练模型，未重新训练）"
+    },
+    "judgment_limits": [
+      "全部数据为 SIMULATED 模拟数据，非真实传感器读数",
+      "趋势判定仅基于最近 3 小时（6 个采样点）",
+      "模型预测基于 B02 历史分布训练，时间外推存在不确定性",
+      "结构化判断由系统生成，LLM 无权修改，仅用于解释"
+    ]
+  },
+  "step5_llm_explanation": {
+    "status": "error",
+    "error_type": "test",
+    "message": "测试环境无 LLM"
+  }
+}

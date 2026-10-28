@@ -1,0 +1,114 @@
+{
+  "run_id": "i1-20261028192945-9fa5dd",
+  "created_at": "2026-10-28 19:29:45",
+  "mode": "run_with_history_prediction",
+  "experiment": "innovate1",
+  "current_observation": {
+    "timestamp": "2026-10-20 20:00:00",
+    "temperature": 30.0,
+    "humidity": 47.3,
+    "light": 10.0
+  },
+  "history_samples": [
+    {
+      "timestamp": "2026-10-20 17:00:00",
+      "temperature": 25.0,
+      "humidity": 50.0,
+      "light": 12000.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 17:30:00",
+      "temperature": 25.8,
+      "humidity": 49.6,
+      "light": 9000.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 18:00:00",
+      "temperature": 26.7,
+      "humidity": 49.1,
+      "light": 6000.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 18:30:00",
+      "temperature": 27.5,
+      "humidity": 48.7,
+      "light": 3500.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 19:00:00",
+      "temperature": 28.3,
+      "humidity": 48.2,
+      "light": 1500.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 19:30:00",
+      "temperature": 29.2,
+      "humidity": 47.8,
+      "light": 400.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 20:00:00",
+      "temperature": 30.0,
+      "humidity": 47.3,
+      "light": 10.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    }
+  ],
+  "prediction": {
+    "predicted_attention": "NORMAL",
+    "model_version": "b06-rf-v1",
+    "probability": {
+      "NORMAL": 0.9243,
+      "WATCH": 0.0757
+    },
+    "input_window": "2026-10-20 17:30:00 ~ 2026-10-20 20:00:00"
+  },
+  "judgment": {
+    "verdict": "attention_trend_prediction_normal",
+    "verdict_note": "已发生的升温趋势（风险）+ 下一窗口预测 NORMAL（预计缓解/稳定）：趋势与预测指向不同，必须区分引用",
+    "trend": {
+      "available": true,
+      "count": 7,
+      "window": "2026-10-20 17:00:00 ~ 2026-10-20 20:00:00",
+      "temperature": {
+        "min": 25.0,
+        "max": 30.0,
+        "mean": 27.5,
+        "half_diff": 2.92
+      },
+      "humidity": {
+        "min": 47.3,
+        "max": 50.0,
+        "mean": 48.7,
+        "half_diff": -1.57
+      },
+      "light": {
+        "min": 10.0,
+        "max": 12000.0,
+        "mean": 4630.0,
+        "half_diff": -7647.5
+      },
+      "data_stable": false,
+      "sim_scenarios": [
+        "normal"
+      ]
+    }
+  },
+  "llm_explanation": {
+    "status": "success",
+    "answer": "【可判断内容】run_with_history_prediction 的可判断内容…\n【受限说明】run_with_history_prediction 的受限说明…"
+  }
+}

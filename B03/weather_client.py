@@ -219,6 +219,91 @@ def _fetch_open_meteo(location, cfg, language, timeout):
     }
 
 
+# ---------------- 未来天气预报（复用同一套认证/超时/错误映射/地点解析） ----------------
+
+def fetch_forecast(location, hours=24, timeout=None):
+    """真实请求外部天气 API 的未来逐小时预报（复用 get_config / 地点解析 / 错误映射）。
+
+    返回 weather_forecast_evidence：
+      provider / retrieved_at / forecast_time（逐小时，升序）/ status / forecast.hourly
+    校验规则（由调用方执行）：forecast_time 必须晚于 analysis_time（retrieved_at）。
+    当前仅支持 open_meteo provider；测试注入沿用 WEATHER_BASE_URL 机制。
+    """
+    requested_at = now_str()
+    started = time.time()
+    location = (location or "").strip()
+    try:
+        cfg = get_config()
+    except WeatherClientError as e:
+        return _error_evidence(location, "unknown", requested_at, started, e)
+
+    provider = cfg["provider"]
+    try:
+        if not location:
+            raise WeatherClientError("validation_error", "location 不能为空（如：南京 / 32.06,118.79）")
+        if provider != "open_meteo":
+            raise WeatherClientError("api_error", "fetch_forecast 当前仅支持 open_meteo provider")
+        t = timeout if timeout is not None else cfg["timeout"]
+        geo_url = cfg["geocode_base_url"] or GEOCODE_URL
+        fc_url = cfg["base_url"] or FORECAST_URL
+
+        # 地点解析（与 fetch_weather 同一套逻辑）
+        if _looks_like_latlng(location):
+            lat, lon = [p.strip() for p in location.split(",")]
+            name = location
+        else:
+            r = httpx.get(geo_url, params={
+                "name": location, "count": 1, "language": "zh", "format": "json",
+            }, timeout=t, follow_redirects=True)
+            r.raise_for_status()
+            results = r.json().get("results") or []
+            if not results:
+                raise WeatherClientError("not_found", "未找到地点: %s" % location, http_status=404)
+            top = results[0]
+            lat, lon = top["latitude"], top["longitude"]
+            name = " / ".join(x for x in (top.get("name"), top.get("admin1"), top.get("country")) if x)
+
+        # 未来逐小时预报（降水概率 + 云量 + 温度，1 天）
+        r2 = httpx.get(fc_url, params={
+            "latitude": lat, "longitude": lon,
+            "hourly": "precipitation_probability,cloud_cover,temperature_2m",
+            "forecast_days": 1, "timezone": "auto",
+        }, timeout=t, follow_redirects=True)
+        r2.raise_for_status()
+        body = r2.json()
+        hourly = body.get("hourly") or {}
+        times = hourly.get("time") or []
+        precip = hourly.get("precipitation_probability") or []
+        cloud = hourly.get("cloud_cover") or []
+        temps = hourly.get("temperature_2m") or []
+        n = min(len(times), max(hours, 1))
+        forecast_hours = [{
+            "time": times[i],
+            "precipitation_probability": precip[i],
+            "cloud_cover": cloud[i],
+            # 向后兼容：部分数据源（如场景桩）不提供温度时省略该字段
+            **({"temperature_2m": temps[i]} if i < len(temps) else {}),
+        } for i in range(n)]
+        if not forecast_hours:
+            raise WeatherClientError("api_error", "预报数据为空（API 未返回 hourly 数据）")
+        return {
+            "evidence_type": "weather_forecast_evidence",
+            "data_source": "external_api",
+            "provider": provider,
+            "query": {"location": location, "requested_at": requested_at},
+            "resolved": {"name": name, "latitude": float(lat), "longitude": float(lon)},
+            "retrieved_at": now_str(),
+            "forecast_time": [h["time"] for h in forecast_hours],
+            "status": "success",
+            "forecast": {"hourly": forecast_hours, "hours": len(forecast_hours)},
+            "latency_ms": round((time.time() - started) * 1000),
+            "raw_response": json.dumps(body, ensure_ascii=False)[:1500],
+            "api_url": str(r2.url),
+        }
+    except Exception as e:
+        return _error_evidence(location, provider, requested_at, started, e)
+
+
 # ---------------- QWeather（需认证，API Key 走环境变量） ----------------
 
 def _fetch_qweather(location, cfg, timeout):

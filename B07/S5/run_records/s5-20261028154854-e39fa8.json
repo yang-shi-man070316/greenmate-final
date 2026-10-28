@@ -1,0 +1,310 @@
+{
+  "run_id": "s5-20261028154854-e39fa8",
+  "created_at": "2026-10-28 15:48:54",
+  "s5_task": "S5 证据退化实验",
+  "experiment": "S5_fault",
+  "mode": "fault",
+  "fault": "rag_insufficient",
+  "fixed_question": "结合全部可用证据，分析当前番茄生长环境风险：哪些方面可以判断，哪些方面因证据受限无法判断？",
+  "adopted_evidence": [
+    {
+      "source_type": "internal_history",
+      "source": "greenmate_b02_db",
+      "time": "2026-10-28 15:48:51",
+      "status": "ok",
+      "result": {
+        "window": "2026-10-08 11:30:00 ~ 2026-10-08 14:30:00",
+        "count": 7,
+        "temperature_first": 26.3,
+        "temperature_last": 38.1,
+        "trend": "持续升温（26.3 → 38.1℃）"
+      },
+      "error": null,
+      "evidence_id": "E1"
+    },
+    {
+      "source_type": "ml_prediction",
+      "source": "greenmate_b06_rf",
+      "time": "2026-10-28 15:48:51",
+      "status": "ok",
+      "result": {
+        "predicted_attention": "WATCH",
+        "probability": {
+          "NORMAL": 0.045,
+          "WATCH": 0.955
+        },
+        "input_window": "2026-10-08 11:30:00 ~ 2026-10-08 14:00:00"
+      },
+      "error": null,
+      "model_version": "b06-rf-v1",
+      "evidence_id": "E2"
+    },
+    {
+      "source_type": "external_weather",
+      "source": "open_meteo",
+      "time": "2026-10-28 15:48:51",
+      "status": "ok",
+      "result": {
+        "location": "32.06,118.79",
+        "resolved": {
+          "name": "32.06,118.79",
+          "latitude": 32.06,
+          "longitude": 118.79
+        },
+        "retrieved_at_api": "2026-10-28 15:48:51",
+        "forecast_time": [
+          "2026-10-28T16:00",
+          "2026-10-28T17:00",
+          "2026-10-28T18:00",
+          "2026-10-28T19:00",
+          "2026-10-28T20:00",
+          "2026-10-28T21:00"
+        ],
+        "forecast": {
+          "hourly": [
+            {
+              "time": "2026-10-28T16:00",
+              "precipitation_probability": 10,
+              "cloud_cover": 40,
+              "temperature_2m": 30.0
+            },
+            {
+              "time": "2026-10-28T17:00",
+              "precipitation_probability": 5,
+              "cloud_cover": 30,
+              "temperature_2m": 28.5
+            },
+            {
+              "time": "2026-10-28T18:00",
+              "precipitation_probability": 5,
+              "cloud_cover": 20,
+              "temperature_2m": 27.0
+            },
+            {
+              "time": "2026-10-28T19:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 15,
+              "temperature_2m": 25.5
+            },
+            {
+              "time": "2026-10-28T20:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 10,
+              "temperature_2m": 24.0
+            },
+            {
+              "time": "2026-10-28T21:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 10,
+              "temperature_2m": 23.0
+            }
+          ],
+          "hours": 6
+        }
+      },
+      "error": null,
+      "provider": "open_meteo",
+      "forecast_time": [
+        "2026-10-28T16:00",
+        "2026-10-28T17:00",
+        "2026-10-28T18:00",
+        "2026-10-28T19:00",
+        "2026-10-28T20:00",
+        "2026-10-28T21:00"
+      ],
+      "evidence_id": "E3"
+    }
+  ],
+  "missing_evidence": [
+    {
+      "source_type": "local_knowledge",
+      "source": "greenmate_b04_kb",
+      "time": "2026-10-28 15:48:51",
+      "status": "ok",
+      "result": {
+        "no_match": true,
+        "note": "知识库中没有匹配的内容（未找到相关知识）"
+      },
+      "error": null,
+      "citation": [],
+      "evidence_id": "E4"
+    }
+  ],
+  "pipeline_log": [
+    {
+      "tool": "B02 历史查询（b02_db.query_series）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "固定窗口 2026-10-08 11:30:00~2026-10-08 14:30:00，持续升温"
+    },
+    {
+      "tool": "B06 模型推理（load_model+predict_proba，未重训）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "predicted_attention=WATCH（模型输出原样保留，不修改）"
+    },
+    {
+      "tool": "B05 get_weather_forecast → B03 fetch_forecast（场景桩：未来降温）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "forecast_time 校验通过（首点 2026-10-28T16:00 > retrieved_at 2026-10-28 15:48:51）"
+    },
+    {
+      "tool": "B05 search_tomato_knowledge → B04",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": false,
+      "note": "故障注入（rag_insufficient）：检索无匹配，证据缺失"
+    }
+  ],
+  "structured_judgment": {
+    "judgment_type": "s5_degraded_judgment",
+    "verdict": "attention_knowledge_missing",
+    "verdict_note": "专业知识证据缺失：缺少『趋势不能证明未来恶化』的不确定性依据",
+    "degraded": true,
+    "synthesis": {
+      "support_attention": [
+        {
+          "source_type": "internal_history",
+          "source": "greenmate_b02_db",
+          "time": "2026-10-28 15:48:51",
+          "status": "ok",
+          "result": {
+            "window": "2026-10-08 11:30:00 ~ 2026-10-08 14:30:00",
+            "count": 7,
+            "temperature_first": 26.3,
+            "temperature_last": 38.1,
+            "trend": "持续升温（26.3 → 38.1℃）"
+          },
+          "error": null,
+          "evidence_id": "E1"
+        },
+        {
+          "source_type": "ml_prediction",
+          "source": "greenmate_b06_rf",
+          "time": "2026-10-28 15:48:51",
+          "status": "ok",
+          "result": {
+            "predicted_attention": "WATCH",
+            "probability": {
+              "NORMAL": 0.045,
+              "WATCH": 0.955
+            },
+            "input_window": "2026-10-08 11:30:00 ~ 2026-10-08 14:00:00"
+          },
+          "error": null,
+          "model_version": "b06-rf-v1",
+          "evidence_id": "E2"
+        }
+      ],
+      "mitigating_or_reverse": [
+        {
+          "source_type": "external_weather",
+          "source": "open_meteo",
+          "time": "2026-10-28 15:48:51",
+          "status": "ok",
+          "result": {
+            "location": "32.06,118.79",
+            "resolved": {
+              "name": "32.06,118.79",
+              "latitude": 32.06,
+              "longitude": 118.79
+            },
+            "retrieved_at_api": "2026-10-28 15:48:51",
+            "forecast_time": [
+              "2026-10-28T16:00",
+              "2026-10-28T17:00",
+              "2026-10-28T18:00",
+              "2026-10-28T19:00",
+              "2026-10-28T20:00",
+              "2026-10-28T21:00"
+            ],
+            "forecast": {
+              "hourly": [
+                {
+                  "time": "2026-10-28T16:00",
+                  "precipitation_probability": 10,
+                  "cloud_cover": 40,
+                  "temperature_2m": 30.0
+                },
+                {
+                  "time": "2026-10-28T17:00",
+                  "precipitation_probability": 5,
+                  "cloud_cover": 30,
+                  "temperature_2m": 28.5
+                },
+                {
+                  "time": "2026-10-28T18:00",
+                  "precipitation_probability": 5,
+                  "cloud_cover": 20,
+                  "temperature_2m": 27.0
+                },
+                {
+                  "time": "2026-10-28T19:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 15,
+                  "temperature_2m": 25.5
+                },
+                {
+                  "time": "2026-10-28T20:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 10,
+                  "temperature_2m": 24.0
+                },
+                {
+                  "time": "2026-10-28T21:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 10,
+                  "temperature_2m": 23.0
+                }
+              ],
+              "hours": 6
+            }
+          },
+          "error": null,
+          "provider": "open_meteo",
+          "forecast_time": [
+            "2026-10-28T16:00",
+            "2026-10-28T17:00",
+            "2026-10-28T18:00",
+            "2026-10-28T19:00",
+            "2026-10-28T20:00",
+            "2026-10-28T21:00"
+          ],
+          "evidence_id": "E3"
+        }
+      ],
+      "insufficient": []
+    },
+    "adopted_evidence": [
+      "E1",
+      "E2",
+      "E3"
+    ],
+    "missing_evidence": [
+      {
+        "evidence_id": "E4",
+        "source_type": "local_knowledge",
+        "source": "greenmate_b04_kb",
+        "status": "ok",
+        "reason": "RAG 检索无匹配结果（检索不足）"
+      }
+    ]
+  },
+  "llm_explanation": {
+    "status": "success",
+    "answer": "【可判断内容】\n- 棚内温度在 11:30–14:30 窗口内由 26.3℃ 持续升至 38.1℃，升幅约 11.8℃，已进入番茄高温胁迫区间（开花坐果期适宜上限约 30℃），存在高温风险 [E1]。\n- 模型预测结果为 WATCH，概率 0.955，与温度实况趋势方向一致，可判断当前处于需关注状态 [E2]。\n- 升温时段集中在午间至午后，符合典型棚内积热特征，短期风险以高温、蒸腾失衡为主 [E1][E2]。\n- 外部天气显示未来数小时降水概率低（5%–10%）、云量 30%–40%，可判断外部无降温性降水补充，棚内高温难以自然缓解 [E3]。\n\n【受限说明】\n- 缺失证据 E4（local_knowledge），原因：RAG 检索无匹配结果（检索不足）。\n- 因此无法判断：该升温趋势是否代表未来持续恶化、番茄各生育期高温阈值与调控措施的专业依据、以及 WATCH 状态下的处置优先级。\n- 另需说明：E3 外部天气的预报时间为 2026-10-28，与 E1/E2 的 2026-10-08 窗口不同期，其降温参考价值有限，仅作方向性参考。",
+    "has_judgable_section": true,
+    "has_limitation_section": true,
+    "model": "deepseek-chat",
+    "elapsed_ms": 3039
+  },
+  "chain_status": "complete"
+}

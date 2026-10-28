@@ -1,0 +1,110 @@
+{
+  "run_id": "s4-20261022200112-dfcf94",
+  "created_at": "2026-10-22 20:01:12",
+  "mode": "baseline",
+  "experiment": "S4_baseline",
+  "evidence": [
+    {
+      "source_type": "internal_history",
+      "source": "greenmate_b02_db",
+      "time": "2026-10-22 20:01:12",
+      "status": "ok",
+      "result": {
+        "window": "2026-10-08 11:30:00 ~ 2026-10-08 14:30:00",
+        "count": 7,
+        "temperature_first": 26.3,
+        "temperature_last": 38.1,
+        "trend": "持续升温（26.3 → 38.1℃）"
+      },
+      "error": null
+    },
+    {
+      "source_type": "ml_prediction",
+      "source": "greenmate_b06_rf",
+      "time": "2026-10-22 20:01:12",
+      "status": "ok",
+      "result": {
+        "predicted_attention": "WATCH",
+        "probability": {
+          "NORMAL": 0.045,
+          "WATCH": 0.955
+        },
+        "input_window": "2026-10-08 11:30:00 ~ 2026-10-08 14:00:00"
+      },
+      "error": null,
+      "model_version": "b06-rf-v1"
+    }
+  ],
+  "pipeline_log": [
+    {
+      "tool": "B02 历史查询（b02_db.query_series）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "固定窗口 2026-10-08 11:30:00~2026-10-08 14:30:00，持续升温"
+    },
+    {
+      "tool": "B06 模型推理（load_model+predict_proba，未重训）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "predicted_attention=WATCH（模型输出原样保留，不修改）"
+    }
+  ],
+  "structured_judgment": {
+    "judgment_type": "s4_divergent_judgment",
+    "verdict": "attention",
+    "verdict_note": "内部证据（持续升温历史 + 模型 WATCH）一致指向风险",
+    "synthesis": {
+      "support_attention": [
+        {
+          "source_type": "internal_history",
+          "source": "greenmate_b02_db",
+          "time": "2026-10-22 20:01:12",
+          "status": "ok",
+          "result": {
+            "trend": "持续升温"
+          },
+          "error": null,
+          "evidence_id": "E1"
+        },
+        {
+          "source_type": "ml_prediction",
+          "source": "greenmate_b06_rf",
+          "time": "2026-10-22 20:01:12",
+          "status": "ok",
+          "result": {
+            "predicted_attention": "WATCH"
+          },
+          "error": null,
+          "model_version": "b06-rf-v1",
+          "evidence_id": "E2"
+        }
+      ],
+      "mitigating_or_reverse": [],
+      "insufficient": []
+    },
+    "evidence_registry": {
+      "E1": {
+        "source_type": "internal_history",
+        "source": "greenmate_b02_db",
+        "status": "ok",
+        "direction": "support_attention"
+      },
+      "E2": {
+        "source_type": "ml_prediction",
+        "source": "greenmate_b06_rf",
+        "status": "ok",
+        "direction": "support_attention"
+      }
+    },
+    "evidence_count": 2
+  },
+  "llm_explanation": {
+    "status": "error",
+    "error_type": "test",
+    "message": "无 LLM"
+  }
+}

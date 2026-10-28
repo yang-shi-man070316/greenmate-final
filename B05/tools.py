@@ -37,6 +37,13 @@ TOOL_META = {
                        "properties": {"location": {"type": "string", "description": "城市名（如 南京）或 纬度,经度"}},
                        "required": ["location"]},
     },
+    "get_weather_forecast": {
+        "description": "真实联网查询指定地点未来逐小时天气预报（降水概率、云量），返回 forecast_time 与逐小时数据。",
+        "parameters": {"type": "object",
+                       "properties": {"location": {"type": "string", "description": "城市名或 纬度,经度"},
+                                      "hours": {"type": "number", "description": "预报小时数（默认 24）"}},
+                       "required": ["location"]},
+    },
     "search_tomato_knowledge": {
         "description": "检索本地番茄/绿植养护知识库，返回带 source 引用的 Top-K 知识片段。知识库无匹配内容时返回 unavailable。",
         "parameters": {"type": "object",
@@ -127,6 +134,28 @@ def get_weather_evidence(location):
             "resolved": ev["resolved"],
             "weather": ev["weather"],
             "api_retrieved_at": ev["retrieved_at"],
+        })
+    return _result("error", "external_api", ev["provider"], error=ev["error"])
+
+
+def get_weather_forecast(location, hours=24):
+    """查询指定地点未来逐小时天气预报（复用 B03 weather_client.fetch_forecast，不重写天气请求）。
+
+    统一返回结构 {status, source, provider, retrieved_at, data?, error?}；
+    data 含 forecast_time（应晚于 retrieved_at）与 forecast.hourly（降水概率/云量）。
+    """
+    location = (location or "").strip()
+    if not location:
+        return _result("error", "external_api", "weather_api",
+                       error={"error_type": "validation_error", "message": "location 不能为空"})
+    ev = weather_client.fetch_forecast(location, hours=hours)
+    if ev["status"] == "success":
+        return _result("ok", "external_api", ev["provider"], data={
+            "location": ev["query"]["location"],
+            "resolved": ev["resolved"],
+            "retrieved_at_api": ev["retrieved_at"],
+            "forecast_time": ev["forecast_time"],
+            "forecast": ev["forecast"],
         })
     return _result("error", "external_api", ev["provider"], error=ev["error"])
 

@@ -1,0 +1,142 @@
+{
+  "run_id": "s5-20261028153223-dfb62f",
+  "created_at": "2026-10-28 15:32:23",
+  "mode": "fault",
+  "fault": "weather_unavailable",
+  "experiment": "S5_fault",
+  "adopted_evidence": [
+    {
+      "source_type": "internal_history",
+      "source": "greenmate_b02_db",
+      "time": "2026-10-28 15:32:23",
+      "status": "ok",
+      "result": {
+        "trend": "升温"
+      },
+      "error": null
+    },
+    {
+      "source_type": "ml_prediction",
+      "source": "greenmate_b06_rf",
+      "time": "2026-10-28 15:32:23",
+      "status": "ok",
+      "result": {
+        "predicted_attention": "WATCH"
+      },
+      "error": null,
+      "model_version": "b06-rf-v1"
+    },
+    {
+      "source_type": "local_knowledge",
+      "source": "greenmate_b04_kb",
+      "time": "2026-10-28 15:32:23",
+      "status": "ok",
+      "result": {
+        "segments": [
+          {
+            "id": "K09"
+          }
+        ]
+      },
+      "error": null,
+      "citation": [
+        {
+          "id": "K09"
+        }
+      ]
+    }
+  ],
+  "missing_evidence": [
+    {
+      "source_type": "external_weather",
+      "source": "open_meteo",
+      "time": "2026-10-28 15:32:23",
+      "status": "error",
+      "result": {
+        "forecast": {
+          "hourly": []
+        }
+      },
+      "error": {
+        "error_type": "network_error",
+        "message": "无法连接天气 API"
+      },
+      "provider": "open_meteo",
+      "forecast_time": [
+        "2026-10-27T20:00"
+      ]
+    }
+  ],
+  "structured_judgment": {
+    "judgment_type": "s5_degraded_judgment",
+    "verdict": "attention_weather_missing",
+    "verdict_note": "天气证据缺失：无法评估未来降温等缓解/反向变化，风险判断失去天气维度",
+    "degraded": true,
+    "synthesis": {
+      "support_attention": [
+        {
+          "source_type": "internal_history",
+          "source": "greenmate_b02_db",
+          "time": "2026-10-28 15:32:23",
+          "status": "ok",
+          "result": {
+            "trend": "升温"
+          },
+          "error": null
+        },
+        {
+          "source_type": "ml_prediction",
+          "source": "greenmate_b06_rf",
+          "time": "2026-10-28 15:32:23",
+          "status": "ok",
+          "result": {
+            "predicted_attention": "WATCH"
+          },
+          "error": null,
+          "model_version": "b06-rf-v1"
+        }
+      ],
+      "mitigating_or_reverse": [],
+      "insufficient": [
+        {
+          "source_type": "local_knowledge",
+          "source": "greenmate_b04_kb",
+          "time": "2026-10-28 15:32:23",
+          "status": "ok",
+          "result": {
+            "segments": [
+              {
+                "id": "K09"
+              }
+            ]
+          },
+          "error": null,
+          "citation": [
+            {
+              "id": "K09"
+            }
+          ]
+        }
+      ]
+    },
+    "adopted_evidence": [
+      null,
+      null,
+      null
+    ],
+    "missing_evidence": [
+      {
+        "evidence_id": null,
+        "source_type": "external_weather",
+        "source": "open_meteo",
+        "status": "error",
+        "reason": "无法连接天气 API"
+      }
+    ]
+  },
+  "llm_explanation": {
+    "status": "error",
+    "error_type": "test",
+    "message": "无 LLM"
+  }
+}

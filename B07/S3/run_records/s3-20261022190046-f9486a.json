@@ -1,0 +1,182 @@
+{
+  "run_id": "s3-20261022190046-f9486a",
+  "created_at": "2026-10-22 19:00:46",
+  "s3_task": "S3 天气叠加对照实验",
+  "experiment": "S3_baseline",
+  "mode": "baseline",
+  "internal_baseline": {
+    "current": {
+      "status": "ok",
+      "source": "simulated_state",
+      "provider": "greenmate_states",
+      "retrieved_at": "2026-10-22 19:00:43",
+      "data": {
+        "state_id": "A",
+        "source_type": "SIMULATED",
+        "temperature": 24.0,
+        "temperature_unit": "°C",
+        "humidity": 65.0,
+        "humidity_unit": "%",
+        "light": 12000.0,
+        "light_unit": "lux"
+      }
+    },
+    "history": {
+      "status": "ok",
+      "source": "simulated_history",
+      "provider": "greenmate_b02_db",
+      "retrieved_at": "2026-10-22 19:00:43",
+      "data": {
+        "samples": [
+          {
+            "timestamp": "2026-10-20 13:30:00",
+            "temperature": 28.9,
+            "humidity": 47.0,
+            "light": 48823.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 14:00:00",
+            "temperature": 29.4,
+            "humidity": 43.8,
+            "light": 47061.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 14:30:00",
+            "temperature": 30.2,
+            "humidity": 45.7,
+            "light": 43293.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 15:00:00",
+            "temperature": 30.3,
+            "humidity": 45.5,
+            "light": 38417.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 15:30:00",
+            "temperature": 30.4,
+            "humidity": 45.9,
+            "light": 35261.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 16:00:00",
+            "temperature": 29.9,
+            "humidity": 44.2,
+            "light": 26581.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          },
+          {
+            "timestamp": "2026-10-20 16:30:00",
+            "temperature": 29.0,
+            "humidity": 45.4,
+            "light": 21595.0,
+            "source_type": "SIMULATED",
+            "sim_scenario": "normal"
+          }
+        ]
+      }
+    },
+    "prediction": {
+      "predicted_attention": "NORMAL",
+      "model_version": "b06-rf-v1",
+      "probability": {
+        "NORMAL": 0.985,
+        "WATCH": 0.015
+      },
+      "input_window": {
+        "start": "2026-10-20 13:30:00",
+        "end": "2026-10-20 16:00:00"
+      }
+    }
+  },
+  "weather_forecast": null,
+  "structured_judgment": {
+    "judgment_type": "s3_combined_judgment",
+    "generated_at": "2026-10-22 19:00:43",
+    "verdict": "stable",
+    "current_state": {
+      "status": "ok",
+      "source": "simulated_state",
+      "provider": "greenmate_states",
+      "retrieved_at": "2026-10-22 19:00:43",
+      "data": {
+        "state_id": "A",
+        "source_type": "SIMULATED",
+        "temperature": 24.0,
+        "temperature_unit": "°C",
+        "humidity": 65.0,
+        "humidity_unit": "%",
+        "light": 12000.0,
+        "light_unit": "lux"
+      }
+    },
+    "recent_trend": {
+      "available": true,
+      "count": 7,
+      "window": "2026-10-20 13:30:00 ~ 2026-10-20 16:30:00",
+      "temperature": {
+        "min": 28.9,
+        "max": 30.4,
+        "mean": 29.7,
+        "half_diff": 0.4
+      },
+      "humidity": {
+        "min": 43.8,
+        "max": 47.0,
+        "mean": 45.4,
+        "half_diff": -0.25
+      },
+      "light": {
+        "min": 21595.0,
+        "max": 48823.0,
+        "mean": 37290.1,
+        "half_diff": -15928.83
+      },
+      "data_stable": true,
+      "sim_scenarios": [
+        "normal"
+      ]
+    },
+    "predicted_attention": "NORMAL",
+    "model_version": "b06-rf-v1",
+    "model_output_modified": false,
+    "model_disagreement_note": null,
+    "evidence_status": {
+      "current_env_source": "simulated_state",
+      "history_source": "simulated_history",
+      "history_status": "ok",
+      "history_sample_count": 7,
+      "prediction_source": "B06 RandomForest（已训练模型，未重新训练）"
+    },
+    "judgment_limits": [
+      "全部数据为 SIMULATED 模拟数据，非真实传感器读数",
+      "趋势判定仅基于最近 3 小时（6 个采样点）",
+      "模型预测基于 B02 历史分布训练，时间外推存在不确定性",
+      "结构化判断由系统生成，LLM 无权修改，仅用于解释"
+    ],
+    "internal_verdict": "stable",
+    "attribution": "none",
+    "weather_risk": null,
+    "forecast_time_valid": null,
+    "weather_forecast": null
+  },
+  "llm_explanation": {
+    "status": "success",
+    "answer": "**当前状态（SIMULATED 模拟数据）**\n\n- 温度 24.0 °C、湿度 65.0 %、光照 12000 lux，状态标记为 ok（state_id A，来源 simulated_state）。\n- 系统综合判定为 **stable（稳定）**，归因字段为 none，即未发现需要归因的异常。\n\n**接下来值得关注的变化**\n\n1. **光照回落**：近期窗口（2026-10-20 13:30~16:30，7 个采样点）光照均值 37290.1 lux，半差为 -15928.83，说明光照在窗口内明显下降；当前值 12000 lux 已远低于该窗口最低值 21595 lux。若后续继续走低，需关注补光。\n2. **温湿度与近期窗口的差异**：近期温度均值 29.7 °C（28.9~30.4），湿度均值 45.4 %（43.8~47.0）；当前 24.0 °C / 65.0 % 相对更凉更湿。这属于状态切换而非趋势内波动，建议确认是时段变化还是环境调控所致。\n3. **模型预测**：b06-rf-v1 给出 NORMAL 概率 0.985、WATCH 0.015，predicted_attention 为 NORMAL，短期无需预警。\n\n**判断依据与限制**\n\n- 判定依据为 judgment.verdict = stable、predicted_attention = NORMAL 及上述数值字段；模型输出未被修改（model_output_modified = false），无模型分歧说明。\n- 限制：全部为 SIMULATED 模拟数据，非真实传感器读数；趋势仅基于最近 3 小时 6 个采样点；模型基于 B02 历史分布训练，时间外推存在不确定性；weather_forecast 为空，无天气风险信息可参考。",
+    "model": "deepseek-chat",
+    "prompt_used": "分析当前番茄生长环境状态以及接下来值得关注的变化，并说明判断依据。",
+    "elapsed_ms": 3179
+  },
+  "chain_status": "complete"
+}

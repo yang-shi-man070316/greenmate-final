@@ -1,21 +1,29 @@
 @echo off
-rem GreenMate 一键启动：检测服务是否运行；未运行则启动并等待就绪，再打开 B03 页面
+chcp 65001 >nul
+rem GreenMate 一键启动 v4：自动记录启动日志，失败时直接显示日志内容
 cd /d "E:\GreenMate\greenmate-final"
 
-netstat -ano | findstr ":8000" | findstr "LISTENING" >nul
+curl -s -o NUL --max-time 2 http://127.0.0.1:8000/ >nul 2>&1
 if %errorlevel%==0 goto open
 
-echo [GreenMate] 服务未运行，正在启动（新窗口保持开启，Ctrl+C 可停止服务）
-start "GreenMate Server" cmd /k ".venv\Scripts\python.exe B06\run.py"
+echo [GreenMate] 服务未运行，正在启动（启动日志写入 greenmate_start.log）
+start "GreenMate Server" cmd /k ".venv\Scripts\python.exe B06\run.py > greenmate_start.log 2>&1"
 
 set tries=0
 :wait
 timeout /t 2 /nobreak >nul
-netstat -ano | findstr ":8000" | findstr "LISTENING" >nul
+curl -s -o NUL --max-time 2 http://127.0.0.1:8000/ >nul 2>&1
 if %errorlevel%==0 goto open
 set /a tries+=1
-if %tries% lss 15 goto wait
-echo [警告] 等待 30 秒后服务仍未就绪，请查看服务窗口里的报错信息
+if %tries% lss 20 goto wait
+
+echo.
+echo [失败] 等待 40 秒服务仍未就绪。启动日志如下（可截图发给 Claude 分析）：
+echo ----------------------------------------
+type greenmate_start.log
+echo ----------------------------------------
+pause
+exit /b 1
 
 :open
 start "" "http://127.0.0.1:8000/B03/"
