@@ -1,0 +1,521 @@
+{
+  "run_id": "i2-20261029020056-2eecf4",
+  "created_at": "2026-10-29 02:00:56",
+  "experiment": "innovate2_trace",
+  "evidence": [
+    {
+      "source_type": "internal_history",
+      "source": "greenmate_b02_db",
+      "time": "2026-10-29 02:00:53",
+      "status": "ok",
+      "result": {
+        "window": "2026-10-08 11:30:00 ~ 2026-10-08 14:30:00",
+        "count": 7,
+        "temperature_first": 26.3,
+        "temperature_last": 38.1,
+        "trend": "持续升温（26.3 → 38.1℃）"
+      },
+      "error": null,
+      "evidence_id": "E1"
+    },
+    {
+      "source_type": "ml_prediction",
+      "source": "greenmate_b06_rf",
+      "time": "2026-10-29 02:00:53",
+      "status": "ok",
+      "result": {
+        "predicted_attention": "WATCH",
+        "probability": {
+          "NORMAL": 0.045,
+          "WATCH": 0.955
+        },
+        "input_window": "2026-10-08 11:30:00 ~ 2026-10-08 14:00:00"
+      },
+      "error": null,
+      "model_version": "b06-rf-v1",
+      "evidence_id": "E2"
+    },
+    {
+      "source_type": "external_weather",
+      "source": "open_meteo",
+      "time": "2026-10-29 02:00:53",
+      "status": "ok",
+      "result": {
+        "location": "32.06,118.79",
+        "resolved": {
+          "name": "32.06,118.79",
+          "latitude": 32.06,
+          "longitude": 118.79
+        },
+        "retrieved_at_api": "2026-10-29 02:00:53",
+        "forecast_time": [
+          "2026-10-29T03:00",
+          "2026-10-29T04:00",
+          "2026-10-29T05:00",
+          "2026-10-29T06:00",
+          "2026-10-29T07:00",
+          "2026-10-29T08:00"
+        ],
+        "forecast": {
+          "hourly": [
+            {
+              "time": "2026-10-29T03:00",
+              "precipitation_probability": 10,
+              "cloud_cover": 40,
+              "temperature_2m": 30.0
+            },
+            {
+              "time": "2026-10-29T04:00",
+              "precipitation_probability": 5,
+              "cloud_cover": 30,
+              "temperature_2m": 28.5
+            },
+            {
+              "time": "2026-10-29T05:00",
+              "precipitation_probability": 5,
+              "cloud_cover": 20,
+              "temperature_2m": 27.0
+            },
+            {
+              "time": "2026-10-29T06:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 15,
+              "temperature_2m": 25.5
+            },
+            {
+              "time": "2026-10-29T07:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 10,
+              "temperature_2m": 24.0
+            },
+            {
+              "time": "2026-10-29T08:00",
+              "precipitation_probability": 0,
+              "cloud_cover": 10,
+              "temperature_2m": 23.0
+            }
+          ],
+          "hours": 6
+        }
+      },
+      "error": null,
+      "provider": "open_meteo",
+      "forecast_time": [
+        "2026-10-29T03:00",
+        "2026-10-29T04:00",
+        "2026-10-29T05:00",
+        "2026-10-29T06:00",
+        "2026-10-29T07:00",
+        "2026-10-29T08:00"
+      ],
+      "evidence_id": "E3"
+    },
+    {
+      "source_type": "local_knowledge",
+      "source": "greenmate_b04_kb",
+      "time": "2026-10-29 02:00:53",
+      "status": "ok",
+      "result": {
+        "query": "持续高温 未来 恶化 趋势",
+        "count": 3,
+        "segments": [
+          {
+            "id": "K09",
+            "topic": "高温趋势判断限制",
+            "scope": "plant_care",
+            "content": "持续高温值得关注并应采取防护措施，但历史升温趋势本身不能证明未来一定继续恶化；短期环境走向受外部条件（如天气变化）影响，应结合预报与后续观测综合判断，避免仅凭趋势外推下确定性结论。",
+            "source": "knowledge/greenmate_care_guide.md#趋势判断限制",
+            "retrieved_at": "2026-10-29 02:00:53",
+            "score": 10,
+            "matched_keywords": [
+              "持续高温",
+              "高温",
+              "未来",
+              "恶化",
+              "趋势"
+            ]
+          },
+          {
+            "id": "K01",
+            "topic": "温度适宜范围",
+            "scope": "plant_care",
+            "content": "多数室内绿植适宜温度为 18–28℃，24℃ 左右最舒适；超过 30℃ 进入高温胁迫，超过 35℃ 叶片易卷曲灼伤；低于 10℃ 多数热带植物出现寒害。",
+            "source": "knowledge/greenmate_care_guide.md#温度管理",
+            "retrieved_at": "2026-10-29 02:00:53",
+            "score": 2,
+            "matched_keywords": [
+              "高温"
+            ]
+          },
+          {
+            "id": "K04",
+            "topic": "高温应对",
+            "scope": "plant_care",
+            "content": "温度达到 32℃ 及以上（如 36℃）时：遮阴或移离直射、加强通风、早晚凉爽时段浇水、暂停施肥；高温与低湿同时出现（如 36℃ + 35% 湿度）时还需配合加湿，避免蒸腾过快导致脱水。",
+            "source": "knowledge/greenmate_care_guide.md#高温应对",
+            "retrieved_at": "2026-10-29 02:00:53",
+            "score": 2,
+            "matched_keywords": [
+              "高温"
+            ]
+          }
+        ]
+      },
+      "error": null,
+      "citation": [
+        {
+          "id": "K09",
+          "source": "knowledge/greenmate_care_guide.md#趋势判断限制"
+        },
+        {
+          "id": "K01",
+          "source": "knowledge/greenmate_care_guide.md#温度管理"
+        },
+        {
+          "id": "K04",
+          "source": "knowledge/greenmate_care_guide.md#高温应对"
+        }
+      ],
+      "evidence_id": "E4"
+    }
+  ],
+  "evidence_boundaries": [
+    {
+      "name": "B02 历史时序",
+      "role": "已发生事实",
+      "boundary": "只回答「已经发生了什么」，不能推断未来、不能替代预测"
+    },
+    {
+      "name": "B06 模型预测",
+      "role": "对未来窗口的推断",
+      "boundary": "只是模型推断（下一窗口），不是已发生事实，可能出错"
+    },
+    {
+      "name": "B03 天气",
+      "role": "外部潜在条件",
+      "boundary": "只提供外部环境条件（预报），是潜在影响因素而非环境内部事实"
+    },
+    {
+      "name": "B04 专业知识",
+      "role": "通用专业判断",
+      "boundary": "只提供通用专业规则，不针对本次具体观测做判断"
+    }
+  ],
+  "pipeline_log": [
+    {
+      "tool": "B02 历史查询（b02_db.query_series）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "固定窗口 2026-10-08 11:30:00~2026-10-08 14:30:00，持续升温"
+    },
+    {
+      "tool": "B06 模型推理（load_model+predict_proba，未重训）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "predicted_attention=WATCH（模型输出原样保留，不修改）"
+    },
+    {
+      "tool": "B05 get_weather_forecast → B03 fetch_forecast（场景桩：未来降温）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "forecast_time 校验通过（首点 2026-10-29T03:00 > retrieved_at 2026-10-29 02:00:53）"
+    },
+    {
+      "tool": "B05 search_tomato_knowledge（B04 本地知识检索）",
+      "tool_called": true,
+      "tool_success": true,
+      "converted_to_evidence": true,
+      "adopted_in_judgment": true,
+      "note": "命中 ['K09', 'K01', 'K04']，采用"
+    }
+  ],
+  "judgment": {
+    "judgment_type": "s4_divergent_judgment",
+    "verdict": "attention_uncertain",
+    "verdict_note": "内部证据支持提高关注，但外部天气提示可能缓解、专业知识提示趋势不能证明未来一定恶化——存在分歧，不强行合并为单一确定结论",
+    "synthesis": {
+      "support_attention": [
+        {
+          "source_type": "internal_history",
+          "source": "greenmate_b02_db",
+          "time": "2026-10-29 02:00:53",
+          "status": "ok",
+          "result": {
+            "window": "2026-10-08 11:30:00 ~ 2026-10-08 14:30:00",
+            "count": 7,
+            "temperature_first": 26.3,
+            "temperature_last": 38.1,
+            "trend": "持续升温（26.3 → 38.1℃）"
+          },
+          "error": null,
+          "evidence_id": "E1"
+        },
+        {
+          "source_type": "ml_prediction",
+          "source": "greenmate_b06_rf",
+          "time": "2026-10-29 02:00:53",
+          "status": "ok",
+          "result": {
+            "predicted_attention": "WATCH",
+            "probability": {
+              "NORMAL": 0.045,
+              "WATCH": 0.955
+            },
+            "input_window": "2026-10-08 11:30:00 ~ 2026-10-08 14:00:00"
+          },
+          "error": null,
+          "model_version": "b06-rf-v1",
+          "evidence_id": "E2"
+        }
+      ],
+      "mitigating_or_reverse": [
+        {
+          "source_type": "external_weather",
+          "source": "open_meteo",
+          "time": "2026-10-29 02:00:53",
+          "status": "ok",
+          "result": {
+            "location": "32.06,118.79",
+            "resolved": {
+              "name": "32.06,118.79",
+              "latitude": 32.06,
+              "longitude": 118.79
+            },
+            "retrieved_at_api": "2026-10-29 02:00:53",
+            "forecast_time": [
+              "2026-10-29T03:00",
+              "2026-10-29T04:00",
+              "2026-10-29T05:00",
+              "2026-10-29T06:00",
+              "2026-10-29T07:00",
+              "2026-10-29T08:00"
+            ],
+            "forecast": {
+              "hourly": [
+                {
+                  "time": "2026-10-29T03:00",
+                  "precipitation_probability": 10,
+                  "cloud_cover": 40,
+                  "temperature_2m": 30.0
+                },
+                {
+                  "time": "2026-10-29T04:00",
+                  "precipitation_probability": 5,
+                  "cloud_cover": 30,
+                  "temperature_2m": 28.5
+                },
+                {
+                  "time": "2026-10-29T05:00",
+                  "precipitation_probability": 5,
+                  "cloud_cover": 20,
+                  "temperature_2m": 27.0
+                },
+                {
+                  "time": "2026-10-29T06:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 15,
+                  "temperature_2m": 25.5
+                },
+                {
+                  "time": "2026-10-29T07:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 10,
+                  "temperature_2m": 24.0
+                },
+                {
+                  "time": "2026-10-29T08:00",
+                  "precipitation_probability": 0,
+                  "cloud_cover": 10,
+                  "temperature_2m": 23.0
+                }
+              ],
+              "hours": 6
+            }
+          },
+          "error": null,
+          "provider": "open_meteo",
+          "forecast_time": [
+            "2026-10-29T03:00",
+            "2026-10-29T04:00",
+            "2026-10-29T05:00",
+            "2026-10-29T06:00",
+            "2026-10-29T07:00",
+            "2026-10-29T08:00"
+          ],
+          "evidence_id": "E3"
+        }
+      ],
+      "insufficient": [
+        {
+          "source_type": "local_knowledge",
+          "source": "greenmate_b04_kb",
+          "time": "2026-10-29 02:00:53",
+          "status": "ok",
+          "result": {
+            "query": "持续高温 未来 恶化 趋势",
+            "count": 3,
+            "segments": [
+              {
+                "id": "K09",
+                "topic": "高温趋势判断限制",
+                "scope": "plant_care",
+                "content": "持续高温值得关注并应采取防护措施，但历史升温趋势本身不能证明未来一定继续恶化；短期环境走向受外部条件（如天气变化）影响，应结合预报与后续观测综合判断，避免仅凭趋势外推下确定性结论。",
+                "source": "knowledge/greenmate_care_guide.md#趋势判断限制",
+                "retrieved_at": "2026-10-29 02:00:53",
+                "score": 10,
+                "matched_keywords": [
+                  "持续高温",
+                  "高温",
+                  "未来",
+                  "恶化",
+                  "趋势"
+                ]
+              },
+              {
+                "id": "K01",
+                "topic": "温度适宜范围",
+                "scope": "plant_care",
+                "content": "多数室内绿植适宜温度为 18–28℃，24℃ 左右最舒适；超过 30℃ 进入高温胁迫，超过 35℃ 叶片易卷曲灼伤；低于 10℃ 多数热带植物出现寒害。",
+                "source": "knowledge/greenmate_care_guide.md#温度管理",
+                "retrieved_at": "2026-10-29 02:00:53",
+                "score": 2,
+                "matched_keywords": [
+                  "高温"
+                ]
+              },
+              {
+                "id": "K04",
+                "topic": "高温应对",
+                "scope": "plant_care",
+                "content": "温度达到 32℃ 及以上（如 36℃）时：遮阴或移离直射、加强通风、早晚凉爽时段浇水、暂停施肥；高温与低湿同时出现（如 36℃ + 35% 湿度）时还需配合加湿，避免蒸腾过快导致脱水。",
+                "source": "knowledge/greenmate_care_guide.md#高温应对",
+                "retrieved_at": "2026-10-29 02:00:53",
+                "score": 2,
+                "matched_keywords": [
+                  "高温"
+                ]
+              }
+            ]
+          },
+          "error": null,
+          "citation": [
+            {
+              "id": "K09",
+              "source": "knowledge/greenmate_care_guide.md#趋势判断限制"
+            },
+            {
+              "id": "K01",
+              "source": "knowledge/greenmate_care_guide.md#温度管理"
+            },
+            {
+              "id": "K04",
+              "source": "knowledge/greenmate_care_guide.md#高温应对"
+            }
+          ],
+          "evidence_id": "E4"
+        }
+      ]
+    },
+    "evidence_registry": {
+      "E1": {
+        "source_type": "internal_history",
+        "source": "greenmate_b02_db",
+        "status": "ok",
+        "direction": "support_attention"
+      },
+      "E2": {
+        "source_type": "ml_prediction",
+        "source": "greenmate_b06_rf",
+        "status": "ok",
+        "direction": "support_attention"
+      },
+      "E3": {
+        "source_type": "external_weather",
+        "source": "open_meteo",
+        "status": "ok",
+        "direction": "mitigating_or_reverse"
+      },
+      "E4": {
+        "source_type": "local_knowledge",
+        "source": "greenmate_b04_kb",
+        "status": "ok",
+        "direction": "insufficient"
+      }
+    },
+    "evidence_count": 4
+  },
+  "conclusion": "当前需要提高关注程度，但天气提示可能缓解、未来是否继续恶化不确定",
+  "conclusion_annotations": {
+    "support": [
+      "E1",
+      "E2"
+    ],
+    "reverse": [
+      "E3"
+    ],
+    "limitation": [
+      "E4"
+    ]
+  },
+  "call_checks": [
+    {
+      "name": "证据 E1（internal_history）有真实工具调用记录",
+      "passed": true,
+      "detail": "调用条目 4 条"
+    },
+    {
+      "name": "证据 E2（ml_prediction）有真实工具调用记录",
+      "passed": true,
+      "detail": "调用条目 4 条"
+    },
+    {
+      "name": "证据 E3（external_weather）有真实工具调用记录",
+      "passed": true,
+      "detail": "调用条目 4 条"
+    },
+    {
+      "name": "证据 E4（local_knowledge）有真实工具调用记录",
+      "passed": true,
+      "detail": "调用条目 4 条"
+    },
+    {
+      "name": "调用记录含入参/结果说明：B02 历史查询（b02_db.query_series）",
+      "passed": true,
+      "detail": "success=True"
+    },
+    {
+      "name": "调用记录含入参/结果说明：B06 模型推理（load_model+predict_pr",
+      "passed": true,
+      "detail": "success=True"
+    },
+    {
+      "name": "调用记录含入参/结果说明：B05 get_weather_forecast → B03",
+      "passed": true,
+      "detail": "success=True"
+    },
+    {
+      "name": "调用记录含入参/结果说明：B05 search_tomato_knowledge（B0",
+      "passed": true,
+      "detail": "success=True"
+    },
+    {
+      "name": "LLM 引用证据均真实存在（无假装调用）",
+      "passed": true,
+      "detail": "引用 ['E1', 'E2', 'E3', 'E4']；不存在：无"
+    }
+  ],
+  "llm_explanation": {
+    "status": "success",
+    "answer": "【支持提高关注的证据】\n- 内部历史窗口内温度由 26.3℃ 持续升至 38.1℃，共 7 条记录，呈持续升温趋势 [E1]。\n- 机器学习预测给出 WATCH，概率 0.955，明显高于 NORMAL 的 0.045 [E2]。\n- 38.1℃ 已超过 35℃ 阈值，按知识库描述叶片易卷曲灼伤，属于高温胁迫区间 [E1][E4-K01]。\n- 知识库也明确“持续高温值得关注并应采取防护措施” [E4-K09]。\n\n【提示情况可能缓解、反向变化的证据】\n- 外部天气预报显示未来数小时降水概率低（5%–10%）、云量 30%–40%，气温在 28.5–30.0℃ 区间，未显示极端高温 [E3]。\n- 知识库指出历史升温趋势本身不能证明未来一定继续恶化，短期走向受外部条件影响 [E4-K09]。\n- 外部天气数据的时间为 2026-10-29，与内部窗口 2026-10-08 不同期，其缓解含义有限 [E3][E1]。\n\n【当前信息不足以确定的部分】\n- 外部天气与内部观测时间不对应，无法据此判断 10-08 当日后续温度走向 [E1][E3]。\n- 缺少 14:30 之后的实测温度，无法确认升温是否延续 [E1]。\n- 缺少湿度、光照、通风等协同因素，无法判断灼伤实际风险程度 [E4-K01]。\n- 证据 E3 内容被截断，预报完整性与可靠性无法完全核实 [E3]。\n- 综合判定为 attention_uncertain，分歧未消解，不宜下单一确定结论 [E1][E2][E3][E4]。",
+    "forbidden_hits": [],
+    "model": "deepseek-chat",
+    "elapsed_ms": 3001
+  },
+  "chain_status": "complete"
+}

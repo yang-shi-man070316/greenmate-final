@@ -47,9 +47,11 @@ def check_forbidden(text):
     hits = []
     for w in FORBIDDEN_WORDS:
         for m in re.finditer(re.escape(w), text or ""):
-            prefix = (text or "")[max(0, m.start() - 3):m.start()]
+            prefix = (text or "")[max(0, m.start() - 6):m.start()]
             if any(neg in prefix for neg in ("不", "无", "难", "未", "别")):
                 continue  # 否定语境，不算强确定性结论
+            if w == "一定" and prefix.endswith("有"):
+                continue  # 「有一定延续性」是程度副词（有些），不是强确定性结论
             hits.append(w)
     return hits
 

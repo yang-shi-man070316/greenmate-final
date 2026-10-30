@@ -1,0 +1,85 @@
+{
+  "run_id": "i3-20261031012240-4a0eb2",
+  "created_at": "2026-10-31 01:22:40",
+  "mode": "run_agree",
+  "experiment": "innovate3",
+  "adopted_evidence": [
+    {
+      "evidence_id": "E1",
+      "source_type": "internal_history",
+      "status": "ok",
+      "source": "greenmate_b02_db",
+      "time": "t",
+      "result": {
+        "trend": "升温"
+      }
+    },
+    {
+      "evidence_id": "E2",
+      "source_type": "ml_prediction",
+      "status": "ok",
+      "source": "greenmate_b06_rf",
+      "time": "t",
+      "result": {
+        "predicted_attention": "WATCH"
+      }
+    },
+    {
+      "status": "ok",
+      "source_type": "external_weather",
+      "data": {
+        "forecast": {
+          "hourly": [
+            {
+              "time": "2026-10-31T01:00",
+              "temperature_2m": 30.5
+            },
+            {
+              "time": "2026-10-31T02:00",
+              "temperature_2m": 31.5
+            },
+            {
+              "time": "2026-10-31T03:00",
+              "temperature_2m": 32.0
+            }
+          ]
+        }
+      },
+      "evidence_id": "E3"
+    },
+    {
+      "evidence_id": "E4",
+      "source_type": "local_knowledge",
+      "status": "ok",
+      "source": "greenmate_b04_kb",
+      "time": "t",
+      "result": {
+        "segments": [
+          {
+            "id": "K09"
+          }
+        ]
+      }
+    }
+  ],
+  "missing_evidence": [],
+  "judgment": {
+    "judgment_type": "i3_judgment",
+    "verdict": "attention_confirmed",
+    "verdict_note": "证据方向一致：历史升温（已发生）+ 模型 WATCH（推断）+ 天气升温（外部条件）均指向风险，结论可以相对明确",
+    "expression_level": "相对明确（证据一致）",
+    "weather_direction": "warming",
+    "adopted_evidence": [
+      "E1",
+      "E2",
+      "E3",
+      "E4"
+    ],
+    "missing_evidence": []
+  },
+  "llm_explanation": {
+    "status": "error",
+    "error_type": "test",
+    "message": "无 LLM"
+  }
+}
