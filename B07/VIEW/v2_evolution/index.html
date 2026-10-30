@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate VIEW2 · 状态演化视图</title>
+<style>
+  :root {
+    --primary: #b39ddb; --primary-dark: #9575cd; --primary-darker: #7e57c2;
+    --bg: #f3effa; --card: #ffffff; --border: #e3ddf0; --text: #332f3d; --muted: #8a8498;
+    --ok: #1b7a3d; --warn: #b26a00; --err: #c62828; --s1: #42a5f5; --s2: #ef5350;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; background: var(--bg);
+         color: var(--text); margin: 0; padding: 32px 16px; display: flex; justify-content: center; }
+  .main-card { width: 100%; max-width: 900px; background: var(--card); border-radius: 16px;
+               box-shadow: 0 8px 28px rgba(94,74,138,0.10); padding: 28px 32px 24px; }
+  h1 { font-size: 22px; margin: 0 0 10px; color: var(--primary-darker); }
+  .runid-bar { background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+               padding: 10px 14px; font-size: 13px; line-height: 1.8; margin-bottom: 20px; }
+  .runid-bar b { color: var(--primary-darker); font-family: Consolas, monospace; }
+  .runid-bar .meta { color: var(--muted); font-size: 12px; }
+  h2 { font-size: 15px; margin: 22px 0 12px; color: var(--primary-darker);
+       border-left: 4px solid var(--primary); padding-left: 10px; }
+  h3 { font-size: 14px; margin: 14px 0 8px; color: var(--primary-darker); }
+  .panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff; padding: 16px 18px; }
+  .chart-box { border: 1px solid var(--border); border-radius: 12px; background: #fbfaff;
+               padding: 14px 16px; margin-bottom: 12px; }
+  .legend { font-size: 12px; color: var(--muted); margin: 4px 0 8px; }
+  .legend .s1 { color: var(--s1); font-weight: 600; }
+  .legend .s2 { color: var(--s2); font-weight: 600; }
+  .node-list { font-size: 13px; line-height: 1.8; }
+  .node-list li { margin: 6px 0; }
+  .node-list b { color: var(--primary-darker); }
+  table.kv { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.kv td { padding: 6px 0; border-bottom: 1px dashed var(--border); vertical-align: top; }
+  table.kv tr:last-child td { border-bottom: none; }
+  table.kv td.k { width: 130px; color: var(--muted); }
+  .answer-box { border: 1px solid var(--primary); border-radius: 12px; background: #faf7ff;
+                padding: 14px 16px; font-size: 14px; line-height: 1.8; }
+  footer { margin-top: 22px; font-size: 12px; color: var(--muted); line-height: 1.7;
+           border-top: 1px dashed var(--border); padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="main-card">
+<h1>GreenMate VIEW2 · 状态演化视图</h1>
+<div class="runid-bar">run_id: <b>i3-20261031013638-f78ead</b><br><span class="meta">创建于 2026-10-31 01:36:38 | mode: run_agree | 静态快照（只读，演化过程与状态标记）</span></div>
+<h2>演化路径对照（同样到达 30℃，两条路径如何形成状态）</h2>
+<div class="chart-box" data-s1-values="29.7,30.2,29.9,30.3,30.0,30.1,30.0" data-s2-values="25.0,25.8,26.7,27.5,28.3,29.2,30.0"><div class="legend">温度演化曲线：<span class="s1">■ S1 稳态维持</span>　<span class="s2">■ S2 持续升温</span>（7 个采样点，30 分钟/点）</div>
+<svg viewBox="0 0 560 180" style="width:100%;height:auto;"><line x1="42" y1="144.0" x2="502" y2="144.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="147.0" font-size="10" fill="#8a8498">20</text><line x1="42" y1="118.4" x2="502" y2="118.4" stroke="#eee9f6" stroke-width="1"/><text x="8" y="121.4" font-size="10" fill="#8a8498">24</text><line x1="42" y1="92.8" x2="502" y2="92.8" stroke="#eee9f6" stroke-width="1"/><text x="8" y="95.8" font-size="10" fill="#8a8498">28</text><line x1="42" y1="67.2" x2="502" y2="67.2" stroke="#eee9f6" stroke-width="1"/><text x="8" y="70.2" font-size="10" fill="#8a8498">33</text><line x1="42" y1="41.6" x2="502" y2="41.6" stroke="#eee9f6" stroke-width="1"/><text x="8" y="44.6" font-size="10" fill="#8a8498">37</text><line x1="42" y1="16.0" x2="502" y2="16.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="19.0" font-size="10" fill="#8a8498">42</text><line x1="42" y1="85.8" x2="502" y2="85.8" stroke="#b26a00" stroke-width="1" stroke-dasharray="5,4"/><text x="410" y="81.8" font-size="10" fill="#b26a00">30℃ 高温边界</text><polyline points="42.0,87.6 118.7,84.7 195.3,86.4 272.0,84.1 348.7,85.8 425.3,85.2 502.0,85.8" fill="none" stroke="#42a5f5" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="87.6" r="4" fill="#42a5f5"/><circle cx="502.0" cy="85.8" r="4" fill="#42a5f5"/><text x="507.0" y="89.8" font-size="11" fill="#42a5f5">S1 末点 30.0</text><polyline points="42.0,114.9 118.7,110.3 195.3,105.0 272.0,100.4 348.7,95.7 425.3,90.5 502.0,85.8" fill="none" stroke="#ef5350" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="114.9" r="4" fill="#ef5350"/><circle cx="425.3" cy="90.5" r="4" fill="#ef5350"/><circle cx="502.0" cy="85.8" r="4" fill="#ef5350"/><text x="507.0" y="89.8" font-size="11" fill="#ef5350">S2 末点 30.0</text></svg></div>
+<div class="chart-box" data-s1-values="46.5,46.2,46.8,46.4,46.6,46.3,46.5" data-s2-values="50.0,49.6,49.1,48.7,48.2,47.8,47.3"><div class="legend">湿度演化曲线：<span class="s1">■ S1 稳态维持</span>　<span class="s2">■ S2 持续升温</span>（7 个采样点，30 分钟/点）</div>
+<svg viewBox="0 0 560 180" style="width:100%;height:auto;"><line x1="42" y1="144.0" x2="502" y2="144.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="147.0" font-size="10" fill="#8a8498">40</text><line x1="42" y1="118.4" x2="502" y2="118.4" stroke="#eee9f6" stroke-width="1"/><text x="8" y="121.4" font-size="10" fill="#8a8498">43</text><line x1="42" y1="92.8" x2="502" y2="92.8" stroke="#eee9f6" stroke-width="1"/><text x="8" y="95.8" font-size="10" fill="#8a8498">46</text><line x1="42" y1="67.2" x2="502" y2="67.2" stroke="#eee9f6" stroke-width="1"/><text x="8" y="70.2" font-size="10" fill="#8a8498">49</text><line x1="42" y1="41.6" x2="502" y2="41.6" stroke="#eee9f6" stroke-width="1"/><text x="8" y="44.6" font-size="10" fill="#8a8498">52</text><line x1="42" y1="16.0" x2="502" y2="16.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="19.0" font-size="10" fill="#8a8498">55</text><polyline points="42.0,88.5 118.7,91.1 195.3,86.0 272.0,89.4 348.7,87.7 425.3,90.2 502.0,88.5" fill="none" stroke="#42a5f5" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="88.5" r="4" fill="#42a5f5"/><circle cx="502.0" cy="88.5" r="4" fill="#42a5f5"/><text x="507.0" y="92.5" font-size="11" fill="#42a5f5">S1 末点 46.5</text><polyline points="42.0,58.7 118.7,62.1 195.3,66.3 272.0,69.8 348.7,74.0 425.3,77.4 502.0,81.7" fill="none" stroke="#ef5350" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="58.7" r="4" fill="#ef5350"/><circle cx="425.3" cy="77.4" r="4" fill="#ef5350"/><circle cx="502.0" cy="81.7" r="4" fill="#ef5350"/><text x="507.0" y="85.7" font-size="11" fill="#ef5350">S2 末点 47.3</text></svg></div>
+<div class="chart-box" data-s1-values="10.0,8.0,6.0,5.0,5.0,5.0,5.0" data-s2-values="12000.0,9000.0,6000.0,3500.0,1500.0,400.0,10.0"><div class="legend">光照演化曲线：<span class="s1">■ S1 稳态维持</span>　<span class="s2">■ S2 持续升温</span>（7 个采样点，30 分钟/点）</div>
+<svg viewBox="0 0 560 180" style="width:100%;height:auto;"><line x1="42" y1="144.0" x2="502" y2="144.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="147.0" font-size="10" fill="#8a8498">0</text><line x1="42" y1="118.4" x2="502" y2="118.4" stroke="#eee9f6" stroke-width="1"/><text x="8" y="121.4" font-size="10" fill="#8a8498">2600</text><line x1="42" y1="92.8" x2="502" y2="92.8" stroke="#eee9f6" stroke-width="1"/><text x="8" y="95.8" font-size="10" fill="#8a8498">5200</text><line x1="42" y1="67.2" x2="502" y2="67.2" stroke="#eee9f6" stroke-width="1"/><text x="8" y="70.2" font-size="10" fill="#8a8498">7800</text><line x1="42" y1="41.6" x2="502" y2="41.6" stroke="#eee9f6" stroke-width="1"/><text x="8" y="44.6" font-size="10" fill="#8a8498">10400</text><line x1="42" y1="16.0" x2="502" y2="16.0" stroke="#eee9f6" stroke-width="1"/><text x="8" y="19.0" font-size="10" fill="#8a8498">13000</text><line x1="42" y1="143.7" x2="502" y2="143.7" stroke="#b26a00" stroke-width="1" stroke-dasharray="5,4"/><text x="410" y="139.7" font-size="10" fill="#b26a00">30℃ 高温边界</text><polyline points="42.0,143.9 118.7,143.9 195.3,143.9 272.0,144.0 348.7,144.0 425.3,144.0 502.0,144.0" fill="none" stroke="#42a5f5" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="143.9" r="4" fill="#42a5f5"/><circle cx="502.0" cy="144.0" r="4" fill="#42a5f5"/><text x="507.0" y="148.0" font-size="11" fill="#42a5f5">S1 末点 5.0</text><polyline points="42.0,25.8 118.7,55.4 195.3,84.9 272.0,109.5 348.7,129.2 425.3,140.1 502.0,143.9" fill="none" stroke="#ef5350" stroke-width="2.5" stroke-linejoin="round"/><circle cx="42.0" cy="25.8" r="4" fill="#ef5350"/><circle cx="425.3" cy="140.1" r="4" fill="#ef5350"/><circle cx="502.0" cy="143.9" r="4" fill="#ef5350"/><text x="507.0" y="147.9" font-size="11" fill="#ef5350">S2 末点 10.0</text></svg></div>
+<h3>S1 稳态维持</h3>
+<div class="panel">形态：30℃ 附近小幅波动（幅差 0.6℃），无持续升降<br>演化解释：稳态维持：7 个采样点始终在 29.7~30.3℃ 窄幅内，历史过程不改变状态判断</div>
+<h3>S2 持续升温</h3>
+<div class="panel">形态：25→30℃ 匀速升温（每 30 分钟 +0.83℃），持续上升<br>演化解释：持续升温：温度逐点爬升，最后一点才到达 30℃——30℃ 是升温过程的结果而非稳态</div>
+<h2>状态节点（判定切换与风险变化）</h2>
+<div class="panel"><ul class="node-list">
+<li><b>S1 路径节点</b>（全程稳定）：S1 七个采样点温度幅差仅 0.6℃，无持续升降——系统判定稳定态（stable），没有状态切换</li>
+<li><b>S2 风险节点</b>（第 6→7 点越过 30℃ 高温边界）：S2 温度在最后两个采样点越过 30℃，持续升温过程使状态进入风险区——同样的 30℃，S2 是升温到达的风险态</li>
+<li><b>模型判定节点</b>（窗口末判定 WATCH（0.955））：B06 模型对演化窗口输出 WATCH（WATCH），模型判定切换为风险关注</li>
+<li><b>存档实例</b>（10-08 11:30~14:30 持续升温（26.3→38.1℃））：本 run_id 的历史窗口同样是持续升温路径（存档仅含首末点），与 S2 演化形态同类</li>
+</ul></div>
+<h2>本存档演化数据（run_id 自带，只读提取）</h2>
+<div class="panel"><table class="kv">
+<tr><td class="k">历史窗口</td><td>2026-10-08 11:30:00 ~ 2026-10-08 14:30:00 | 温度 26.3 → 38.1℃ | 持续升温（26.3 → 38.1℃）</td></tr>
+<tr><td class="k">说明</td><td>存档仅含窗口首末温度（逐点历史序列未存入存档，如实标注，不重新查询）</td></tr>
+<tr><td class="k">模型判定</td><td>WATCH（概率 {&#x27;NORMAL&#x27;: 0.045, &#x27;WATCH&#x27;: 0.955}）</td></tr>
+<tr><td class="k">天气预报温度（存档自带）</td><td>30.5, 31.0, 31.5, 32.0, 32.5, 33.0 | 存档自带天气预报逐时温度（外部潜在条件）</td></tr>
+<tr><td class="k">判定结论</td><td>attention_confirmed（证据方向一致：历史升温（已发生）+ 模型 WATCH（推断）+ 天气升温（外部条件）均指向风险，结论可以相对明确）</td></tr>
+</table></div>
+<h2>一句话回答</h2>
+<div class="answer-box">S1 与 S2 同样在最后一点到达 30℃：S1 是全程 29.7~30.3℃ 的稳态维持（判定稳定）；S2 是 25→30℃ 的持续升温（判定风险）。状态不是由单个瞬时值决定的，而是由演化过程形成的——这正是时序演化推理的核心。</div>
+<footer>本视图为只读渲染：未重新查询时序数据、未重新拉取天气、未调用 LLM、未重跑模型，未新增推理。S1/S2 对照数据为内嵌常量（与 B07/S2 实验定义一致），存档缺失字段如实标注。</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GreenMate VIEW3 · 证据空间视图</title>
+<style>
+  :root {
+    --primary: #b39ddb; --primary-dark: #9575cd; --primary-darker: #7e57c2;
+    --bg: #f3effa; --card: #ffffff; --border: #e3ddf0; --text: #332f3d; --muted: #8a8498;
+    --ok: #1b7a3d; --warn: #b26a00; --err: #c62828; --blue: #1565c0;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; background: var(--bg);
+         color: var(--text); margin: 0; padding: 32px 16px; display: flex; justify-content: center; }
+  .main-card { width: 100%; max-width: 920px; background: var(--card); border-radius: 16px;
+               box-shadow: 0 8px 28px rgba(94,74,138,0.10); padding: 28px 32px 24px; }
+  h1 { font-size: 22px; margin: 0 0 10px; color: var(--primary-darker); }
+  .runid-bar { background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+               padding: 10px 14px; font-size: 13px; line-height: 1.8; margin-bottom: 20px; }
+  .runid-bar b { color: var(--primary-darker); font-family: Consolas, monospace; }
+  .runid-bar .meta { color: var(--muted); font-size: 12px; }
+  h2 { font-size: 15px; margin: 24px 0 12px; color: var(--primary-darker);
+       border-left: 4px solid var(--primary); padding-left: 10px; }
+  h3 { font-size: 14px; margin: 14px 0 8px; color: var(--primary-darker); }
+  .ev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+  .ev-card { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff;
+             padding: 14px 16px; }
+  .ev-card .head { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .ev-card .name { font-weight: 600; font-size: 14px; color: var(--primary-darker); }
+  .tag { border-radius: 999px; padding: 1px 10px; font-size: 11px; font-weight: 600; }
+  .tag.ok { background: #e6f4ea; color: var(--ok); border: 1px solid #b7dfc2; }
+  .tag.warn { background: #fdf3e0; color: var(--warn); border: 1px solid #eed9a8; }
+  .tag.err { background: #fdeeee; color: var(--err); border: 1px solid #f3c0c0; }
+  .ev-card .q { font-size: 13px; line-height: 1.8; }
+  .ev-card .q .k { color: var(--muted); margin-right: 4px; }
+  .tools-panel { border: 1px solid var(--border); border-radius: 12px; background: #fdfcff;
+                 padding: 14px 16px; font-size: 12px; line-height: 1.9; }
+  .dir-list { font-size: 13px; line-height: 2; }
+  .dir-support { color: var(--err); font-weight: 600; }
+  .dir-reverse { color: var(--blue); font-weight: 600; }
+  .dir-limit { color: var(--warn); font-weight: 600; }
+  .missing-box { border: 1px solid #eed9a8; border-radius: 12px; background: #fdf6e8;
+                 padding: 14px 16px; font-size: 13px; line-height: 1.9; }
+  .answer-box { border: 1px solid var(--primary); border-radius: 12px; background: #faf7ff;
+                padding: 14px 16px; font-size: 14px; line-height: 1.8; }
+  footer { margin-top: 22px; font-size: 12px; color: var(--muted); line-height: 1.7;
+           border-top: 1px dashed var(--border); padding-top: 12px; }
+</style>
+</head>
+<body>
+<div class="main-card">
+<h1>GreenMate VIEW3 · 证据空间视图</h1>
+<div class="runid-bar">run_id: <b>i3-20261031013638-f78ead</b><br><span class="meta">创建于 2026-10-31 01:36:38 | mode: run_agree | 静态快照（只读，多源证据组织）</span></div>
+<h2>证据空间总览</h2>
+<div class="panel">判定：attention_confirmed（证据方向一致：历史升温（已发生）+ 模型 WATCH（推断）+ 天气升温（外部条件）均指向风险，结论可以相对明确）</div>
+<h2>五类证据（每条回答三问）</h2>
+<div class="ev-grid">
+<div class="ev-card"><div class="head"><span class="name">历史证据</span><span class="tag ok">有效</span></div><div class="q"><span class="k">它从哪里来：</span>greenmate_b02_db</div><div class="q"><span class="k">它说了什么：</span>窗口 2026-10-08 11:30:00 ~ 2026-10-08 14:30:00，温度 26.3→38.1℃，持续升温（26.3 → 38.1℃）</div><div class="q"><span class="k">它现在是否有效：</span>有效（ok）</div></div>
+<div class="ev-card"><div class="head"><span class="name">天气证据</span><span class="tag ok">有效</span></div><div class="q"><span class="k">它从哪里来：</span>open_meteo</div><div class="q"><span class="k">它说了什么：</span>未来 6 小时预报，温度 30.5, 31.0, 31.5℃（provider=open_meteo，forecast_time 首点=2026-10-31T02:00）</div><div class="q"><span class="k">它现在是否有效：</span>有效（ok）</div></div>
+<div class="ev-card"><div class="head"><span class="name">知识证据</span><span class="tag ok">有效</span></div><div class="q"><span class="k">它从哪里来：</span>greenmate_b04_kb</div><div class="q"><span class="k">它说了什么：</span>检索「持续高温 未来 恶化 趋势」命中 [&#x27;K09&#x27;, &#x27;K01&#x27;, &#x27;K04&#x27;]，citation=3 条（K09→knowledge/greenmate_care_guide.md#趋势判断限制; K01→knowledge/greenmate_care_guide.md#温度管理）</div><div class="q"><span class="k">它现在是否有效：</span>有效（ok）</div></div>
+<div class="ev-card"><div class="head"><span class="name">模型证据</span><span class="tag ok">有效</span></div><div class="q"><span class="k">它从哪里来：</span>greenmate_b06_rf</div><div class="q"><span class="k">它说了什么：</span>predicted_attention=WATCH，概率={&#x27;NORMAL&#x27;: 0.045, &#x27;WATCH&#x27;: 0.955}（b06-rf-v1）</div><div class="q"><span class="k">它现在是否有效：</span>有效（ok）</div></div>
+</div>
+<h2>工具与运行状态</h2>
+<div class="tools-panel">链状态：complete<br>B02 历史查询（b02_db.query_series） | 调用=True | 成功=True | 转为证据=True | 采用=True | 固定窗口 2026-10-08 11:30:00~2026-10-08 14:30:00，持续升温<br>B06 模型推理（load_model+predict_proba，未重训） | 调用=True | 成功=True | 转为证据=True | 采用=True | predicted_attention=WATCH（模型输出原样保留，不修改）<br>B05 search_tomato_knowledge（B04 本地知识检索） | 调用=True | 成功=True | 转为证据=True | 采用=True | 命中 [&#x27;K09&#x27;, &#x27;K01&#x27;, &#x27;K04&#x27;]，采用<br>B05 get_weather_forecast → B03（升温桩） | 调用=True | 成功=True | 转为证据=True | 采用=True | 场景：天气升温（与内部证据一致）</div>
+<h2>证据分歧案例（S4 存档，方向分类引用存档 synthesis）</h2>
+<div class="panel dir-list">
+来源存档 run_id：s4-20261022202715-3741cc（verdict=attention_uncertain）<br>
+<span class="dir-support">支持提高关注：E1, E2</span><br>
+<span class="dir-reverse">意见相反（提示缓解）：E3</span><br>
+<span class="dir-limit">仅支持部分判断（不确定性）：E4</span><br>
+说明：内部证据支持提高关注，但外部天气提示可能缓解、专业知识提示趋势不能证明未来一定恶化——存在分歧，不强行合并为单一确定结论<br>
+</div>
+<h2>证据缺失案例（S5 存档，天气 unavailable）</h2>
+<div class="missing-box">
+来源存档 run_id：s5-20261028153511-cd8ae2（fault=weather_unavailable，verdict=attention_weather_missing）<br>
+有效证据：E1, E2, E4<br>
+<b>缺失证据：E3（external_weather，status=error）不可用原因：网络异常：无法连接外部天气 API，请检查网络</b><br>
+对判断的影响：天气证据缺失：无法评估未来降温等缓解/反向变化，风险判断失去天气维度<br>
+区分说明：「没有数据」= 证据标记 unavailable 并如实展示原因与影响，而不是从页面消失（缺失本身被当作信息呈现）。<br>
+</div>
+<h2>一句话回答</h2>
+<div class="answer-box">GreenMate 的判断依据全部可追溯：历史（已发生）与模型（推断）支持提高关注；天气证据在分歧案例中提示缓解、在缺失案例中如实标注不可用；知识证据只支持部分判断。证据支持、相反、缺失三种状态在空间视图上一目了然。</div>
+<footer>本视图为只读渲染：未重跑实验、未调用 LLM、未重算模型、未请求接口。分歧方向引用 S4 存档自带 synthesis 分类；缺失原因引用 S5 存档自带 missing_evidence。</footer>
+</div>
+</body>
+</html>
