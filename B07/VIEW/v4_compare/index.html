@@ -52,7 +52,7 @@
 <h2>一句话回答</h2>
 <div class="answer-box">如果条件改变，GreenMate 的判断会跟着合理变化：历史时序不同 → 稳态 vs 风险；天气证据加入 → 关注点扩展到分歧；证据缺失 → 判断边界收缩。输入 → 证据 → 状态 → 判断的因果链在每组对照中完整可见。</div>
 <div class="cmp-card"><div class="cmp-title">对照1 S1 ↔ S2：历史时序不同，当前判断为何不同</div>
-<div class="run-row"><div class="run-chip"><span class="scene">S1</span><span class="rid">s1-20261020212515-1d9ba6</span><span class="tag stable">stable</span></div><div class="run-chip"><span class="scene">S2</span><span class="rid">s2-20261021221953-964d11</span><span class="tag attention">attention</span></div></div>
+<div class="run-row"><div class="run-chip"><span class="scene">S1</span><span class="rid">run_id: s1-20261020212515-1d9ba6</span><span class="tag stable">stable</span></div><div class="run-chip"><span class="scene">S2</span><span class="rid">run_id: s2-20261021221953-964d11</span><span class="tag attention">attention</span></div></div>
 <div class="cmp-grid">
 <div class="cmp-item"><span class="k input">输入变化</span>当前观测几乎一致（均约 30℃），唯一变化 = 历史时序曲线：S1 近 3 小时 28.9→29.0℃ 小幅波动（前后半均值差 +0.40℃）→ S2 近 3 小时 25.0→30.0℃ 匀速升温（前后半均值差 +2.92℃）</div>
 <div class="cmp-item"><span class="k evidence">证据变化</span>历史证据（B02 时序）内容改变：S1 呈稳态平台（data_stable=True）→ S2 呈持续升温（data_stable=False）</div>
@@ -60,7 +60,7 @@
 <div class="cmp-item"><span class="k reason">原因解释</span>原因（引用存档 verdict_note / recent_trend 字段）：</div>
 </div></div>
 <div class="cmp-card"><div class="cmp-title">对照2 S2 ↔ S3：加入外部天气证据后，未来关注点如何变化</div>
-<div class="run-row"><div class="run-chip"><span class="scene">S2</span><span class="rid">s2-20261021221953-964d11</span><span class="tag attention">attention</span></div><div class="run-chip"><span class="scene">S3</span><span class="rid">s3-20261022194350-9457a8</span><span class="tag attention">weather_attention</span></div></div>
+<div class="run-row"><div class="run-chip"><span class="scene">S2</span><span class="rid">run_id: s2-20261021221953-964d11</span><span class="tag attention">attention</span></div><div class="run-chip"><span class="scene">S3</span><span class="rid">run_id: s3-20261022194350-9457a8</span><span class="tag attention">weather_attention</span></div></div>
 <div class="cmp-grid">
 <div class="cmp-item"><span class="k input">输入变化</span>S2 仅有内部数据（无天气证据）；S3 新增外部天气预报证据（未来 3 小时降水概率 [88, 92, 85]%，云量 [95, 93, 90]%——阴雨低光照预报，status=ok）</div>
 <div class="cmp-item"><span class="k evidence">证据变化</span>证据链新增 B03 天气证据（外部潜在条件）：阴雨低光照预报，提示外部环境变化</div>
@@ -68,7 +68,7 @@
 <div class="cmp-item"><span class="k reason">原因解释</span>原因（引用存档 verdict_note / recent_trend / attribution 字段）：</div>
 </div></div>
 <div class="cmp-card"><div class="cmp-title">对照3 S4 ↔ S5：证据从存在分歧变为缺失后，判断边界怎么变化</div>
-<div class="run-row"><div class="run-chip"><span class="scene">S4</span><span class="rid">s4-20261022202715-3741cc</span><span class="tag attention">attention_uncertain</span></div><div class="run-chip"><span class="scene">S5</span><span class="rid">s5-20261028153511-cd8ae2</span><span class="tag attention">attention_weather_missing</span></div></div>
+<div class="run-row"><div class="run-chip"><span class="scene">S4</span><span class="rid">run_id: s4-20261022202715-3741cc</span><span class="tag attention">attention_uncertain</span></div><div class="run-chip"><span class="scene">S5</span><span class="rid">run_id: s5-20261028153511-cd8ae2</span><span class="tag attention">attention_weather_missing</span></div></div>
 <div class="cmp-grid">
 <div class="cmp-item"><span class="k input">输入变化</span>同一份天气证据 E3 的可用性改变：S4 中 E3 有效（降温预报，与内部证据分歧）→ S5 中 E3 调用失败（E3（网络异常：无法连接外部天气 API，请检查网络））</div>
 <div class="cmp-item"><span class="k evidence">证据变化</span>天气证据从『有效但方向相反』变为『缺失不可用』：分歧依据消失，受限维度出现</div>

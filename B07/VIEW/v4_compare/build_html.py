@@ -114,7 +114,7 @@ def build_html(answer, readonly, pairs):
         html += '<div class="run-row">'
         for scene, rid, verdict in pair["runs"]:
             html += ('<div class="run-chip"><span class="scene">%s</span>'
-                     '<span class="rid">%s</span>'
+                     '<span class="rid">run_id: %s</span>'
                      '<span class="tag %s">%s</span></div>' % (
                          esc(scene), esc(rid), verdict_class(verdict), esc(verdict)))
         html += '</div>\n<div class="cmp-grid">\n'
