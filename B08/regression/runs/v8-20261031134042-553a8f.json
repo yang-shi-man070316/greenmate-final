@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134042-553a8f",
+  "case_id": "case_drift_01",
+  "group": "drift",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention，预期 ['attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['升温', '趋势', '上升']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention"
+      ],
+      "actual": "attention"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的风险\n\n**1. 温度偏高且短时上升明显**\n- 20:00 温度 30.0℃，对番茄而言处于偏高区间（尤其夜间）。\n- 3 小时内从 25.0℃ 升至 30.0℃，升温幅度约 5℃，变化较快，值得关注。\n\n**2. 湿度偏低**\n- 当前湿度 47.3%，对番茄生长偏干，可能影响蒸腾与水分平衡。\n\n**3. 温湿组合偏“干热”**\n- 高温叠加中低湿度，存在水分胁迫与开花坐果受影响的可能（属倾向性判断，非确定结论）。\n\n**4. 光照读数异常需留意**\n- 20:00 光照读数 10.0，若为自然光则与夜间时段不符，可能是人工补光或传感器口径问题，需核实含义后再解读。\n\n**5. 系统判定为 attention**\n- 与上述温湿度偏离相互印证，整体处于“需关注”而非正常状态。\n\n## 因证据受限无法判断\n\n- **趋势是否持续**：仅有 7 条、3 小时窗口的历史，无法判断是短期波动还是持续漂移。\n- **外部天气影响**：weather_evidence 为空，无法排除外部气象因素。\n- **阈值依据**：knowledge_citation 为空，缺少权威阈值引用，上述区间判断仅为通用经验，非标准判定。\n- **光照单位与来源**：读数含义不明，无法评估光照风险。\n- **土壤/基质水分、CO₂、病害虫情**：均无数据，无法评估根区水分、通风与病虫害风险。\n- **verdict_note 为空**：系统未给出判定理由，无法核对 attention 的具体触发条件。\n\n**小结**：可判断的是“当前温湿度偏干热、温度短时上升较快、系统标记需关注”；不可判断的是趋势持续性、外部天气、光照真实含义及根区/病虫害等维度。建议补充天气数据、明确光照口径并延长历史窗口后再做进一步评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

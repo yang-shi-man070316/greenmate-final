@@ -1,0 +1,162 @@
+{
+  "case_id": "case_weather_01",
+  "group": "weather",
+  "derived_from": "b08_s3_weather",
+  "app_version": "B08_baseline_01",
+  "model_version": "b06-rf-v1",
+  "expected": {
+    "verdict_expect": [
+      "weather_attention"
+    ],
+    "model_expect": [
+      "NORMAL",
+      "WATCH"
+    ],
+    "weather_expect": "ok",
+    "llm_must": [
+      "天气",
+      "降水",
+      "云量",
+      "阴雨"
+    ],
+    "llm_must_not": []
+  },
+  "snapshot": {
+    "scenario_id": "case_weather_01",
+    "name": "S3 天气叠加",
+    "source_module": "B07/S3",
+    "source_run_id": "s3-20261022194350-9457a8",
+    "app_version": "B08_baseline_01",
+    "model_version": "b06-rf-v1",
+    "knowledge_version": "b04_kb_v1（K01~K09，knowledge_base.json version 1.0）",
+    "frozen_at": "2026-10-31 04:38:42",
+    "fixed_question": "结合全部可用证据，分析当前番茄生长环境风险：哪些方面可以判断，哪些方面因证据受限无法判断？",
+    "observation": {
+      "temperature": 38.1,
+      "humidity": 27.8,
+      "light": 48794.0,
+      "observed_at": "2026-10-08 14:30:00"
+    },
+    "history_series": [
+      {
+        "timestamp": "2026-10-08 11:30:00",
+        "temperature": 26.3,
+        "humidity": 51.1,
+        "light": 54938.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "normal"
+      },
+      {
+        "timestamp": "2026-10-08 12:00:00",
+        "temperature": 27.5,
+        "humidity": 49.8,
+        "light": 57833.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "normal"
+      },
+      {
+        "timestamp": "2026-10-08 12:30:00",
+        "temperature": 32.2,
+        "humidity": 39.9,
+        "light": 57135.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "D1:ramp_in"
+      },
+      {
+        "timestamp": "2026-10-08 13:00:00",
+        "temperature": 36.9,
+        "humidity": 32.1,
+        "light": 61673.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "D1"
+      },
+      {
+        "timestamp": "2026-10-08 13:30:00",
+        "temperature": 37.6,
+        "humidity": 30.3,
+        "light": 57017.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "D1"
+      },
+      {
+        "timestamp": "2026-10-08 14:00:00",
+        "temperature": 37.8,
+        "humidity": 31.0,
+        "light": 51191.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "D1"
+      },
+      {
+        "timestamp": "2026-10-08 14:30:00",
+        "temperature": 38.1,
+        "humidity": 27.8,
+        "light": 48794.0,
+        "source_type": "SIMULATED",
+        "sim_scenario": "D1"
+      }
+    ],
+    "weather_evidence": {
+      "status": "ok",
+      "provider": "open_meteo",
+      "forecast_time": [
+        "2026-10-22T20:00",
+        "2026-10-22T21:00",
+        "2026-10-22T22:00",
+        "2026-10-22T23:00",
+        "2026-10-23T00:00",
+        "2026-10-23T01:00"
+      ],
+      "hourly": [
+        {
+          "time": "2026-10-22T20:00",
+          "precipitation_probability": 88,
+          "cloud_cover": 95
+        },
+        {
+          "time": "2026-10-22T21:00",
+          "precipitation_probability": 92,
+          "cloud_cover": 93
+        },
+        {
+          "time": "2026-10-22T22:00",
+          "precipitation_probability": 85,
+          "cloud_cover": 90
+        },
+        {
+          "time": "2026-10-22T23:00",
+          "precipitation_probability": 80,
+          "cloud_cover": 88
+        },
+        {
+          "time": "2026-10-23T00:00",
+          "precipitation_probability": 75,
+          "cloud_cover": 85
+        },
+        {
+          "time": "2026-10-23T01:00",
+          "precipitation_probability": 70,
+          "cloud_cover": 80
+        }
+      ]
+    },
+    "knowledge_citation": [],
+    "judgment_snapshot": {
+      "verdict": "weather_attention",
+      "verdict_note": null
+    },
+    "frozen": true,
+    "derived_from": "b08_s3_weather",
+    "model_evidence": {
+      "model_version": "b06-rf-v1",
+      "locked": true,
+      "note": "本轮验证固定使用已冻结模型，回放模式不重跑模型",
+      "source_prediction": {
+        "predicted_attention": "NORMAL",
+        "probability": {
+          "NORMAL": 0.985,
+          "WATCH": 0.015
+        }
+      }
+    }
+  }
+}

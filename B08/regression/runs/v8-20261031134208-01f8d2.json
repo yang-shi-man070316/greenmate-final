@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134208-01f8d2",
+  "case_id": "case_degraded_01",
+  "group": "degraded",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_weather_missing，预期 ['attention_weather_missing']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=unavailable，预期 unavailable"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['受限', '缺失', '无法判断']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_weather_missing"
+      ],
+      "actual": "attention_weather_missing"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "unavailable",
+      "actual": "unavailable"
+    }
+  },
+  "llm_answer": "# 当前番茄生长环境风险分析\n\n## 一、可判断的方面（基于现有观测与历史）\n\n**1. 温度处于明显偏高区间**\n- 当前温度 38.1℃，结合 K01 温度适宜范围，已超出番茄适宜区间，属于高温胁迫状态。\n- 历史窗口（11:30–14:30，7 条记录）温度由 26.3℃ 升至 38.1℃，呈持续上升趋势，说明高温不是瞬时波动，而是逐步累积。\n\n**2. 湿度偏低，与高温叠加**\n- 当前湿度 27.8%，在高温条件下偏低，蒸腾压力较大，可能加剧植株水分胁迫。\n\n**3. 光照强度较高**\n- 光照 48794.0，配合高温低湿，午后强光环境可能进一步加重热负荷。\n\n**4. 综合判定**\n- 系统判定为 `attention_weather_missing`，即当前环境已需关注，但天气维度缺失使判断边界收缩。\n\n## 二、因证据受限无法判断的方面\n\n**1. 未来天气走向无法评估**\n- 天气证据状态为 `unavailable`（调用失败，无未来天气数据），因此无法判断后续是否降温、是否有缓解或反向变化。\n\n**2. 高温趋势的持续性无法确认**\n- 依据 K09「趋势判断限制」，仅有 3 小时窗口的上升趋势，不足以推断全天或未来走势，不能据此得出高温将持续的结论。\n\n**3. 缓解措施效果与风险演变无法预判**\n- 缺少天气维度，无法评估 K04 高温应对措施在未来环境下的必要性与效果。\n\n## 三、结论\n\n可判断：**当前时点存在高温、低湿、强光叠加的环境压力，需关注**。\n不可判断：**未来天气变化、高温是否持续、风险将缓解还是加剧**——这些均因天气证据缺失而受限，不宜作确定性推断。",
+  "llm_status": "success",
+  "key_diffs": []
+}

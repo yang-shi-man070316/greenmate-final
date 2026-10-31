@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134340-f5ed8e",
+  "case_id": "case_conflict_01",
+  "group": "conflict",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_uncertain，预期 ['attention_uncertain']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['分歧']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_uncertain"
+      ],
+      "actual": "attention_uncertain"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "# 番茄生长环境风险分析（基于固定证据）\n\n## 一、可判断的方面\n\n**1. 当前观测存在高温、低湿风险信号**\n- 观测值：温度 38.1℃、湿度 27.8%、光照 48794 lux（2026-10-08 14:30）。\n- 对照 K01 温度适宜范围，38.1℃ 已明显偏高；湿度 27.8% 偏低。可判断当前时点处于高温低湿状态，需提高关注（K04 高温应对）。\n\n**2. 短时历史呈升温趋势**\n- 7 条记录窗口内，温度由 26.3℃ 升至 38.1℃，为上升走势。可判断观测前数小时温度在升高。\n\n**3. 外部天气证据与观测存在时间错位**\n- 天气证据的预报时间为 2026-10-22 至 10-23，而观测时间为 2026-10-08，两者相差约两周，不能直接用于解释或缓解当前观测。该证据对当前场景的适用性受限。\n\n## 二、因证据受限无法判断的方面\n\n**1. 未来是否持续恶化——无法判断**\n- 依据 K09，趋势判断存在限制：短时升温记录不足以证明未来一定继续恶化。历史窗口仅 7 条、约 3 小时，样本有限。\n\n**2. 外部天气能否缓解当前高温——无法判断**\n- 天气证据时间与观测不匹配，不能据此推断当前或近期会降温、降水。\n\n**3. 湿度、光照的适宜性阈值——受限**\n- 现有引用仅覆盖温度（K01/K04）与趋势限制（K09），缺少湿度、光照的适宜范围依据，无法对这两项做规范判定。\n\n**4. 作物实际受害程度——无法判断**\n- 证据中无植株状态、品种、生育期等信息，无法评估实际影响。\n\n## 三、综合结论\n- 可判断：当前时点高温低湿、短时升温，值得提高关注。\n- 不可判断：未来走势、外部天气缓解作用、湿度/光照阈值合规性、实际受害程度。\n- 与判定快照一致：内部证据支持提高关注，但外部天气与趋势限制之间存在分歧，不宜合并为单一确定结论。",
+  "llm_status": "success",
+  "key_diffs": []
+}

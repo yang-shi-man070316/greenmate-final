@@ -1,0 +1,56 @@
+{
+  "run_id": "v8-20261031134100-318de1",
+  "case_id": "case_weather_02",
+  "group": "weather",
+  "passed": false,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=weather_attention，预期 ['weather_attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": false,
+      "detail": "predicted_attention=None，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['天气', '降水']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "weather_attention"
+      ],
+      "actual": "weather_attention"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": null
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可判断的风险（基于观测与历史）\n\n- **高温胁迫风险**：14:00 气温 37.8℃，已处于番茄生长的高温胁迫区间，可能影响坐果与光合。\n- **升温速率偏快**：11:30 至 14:00 由 26.3℃ 升至 37.8℃，2.5 小时内升约 11.5℃，升温较快，需关注午后持续高温。\n- **低湿叠加高温**：湿度 31%，与高温叠加，蒸腾压力偏大，存在水分胁迫倾向。\n- **强光**：光照 51191 lux，属较强光照，与高温低湿共同构成复合胁迫条件。\n- **系统判定**：快照给出 `weather_attention`，与上述观测方向一致。\n\n## 因证据受限无法判断\n\n- **降水/阴天对本地的影响**：天气证据的预报时间为 2026-10-22 至 10-23，与观测时间 2026-10-08 不对应，不能用于判断当前或近期降水风险。\n- **土壤水分与灌溉状态**：无相关数据，无法判断实际水分胁迫程度。\n- **作物品种、生育期与长势**：缺失，无法评估耐受性差异。\n- **通风、遮阳等设施条件**：缺失，无法判断缓解能力。\n- **知识引用为空**：无阈值依据支撑，上述区间判断仅为方向性提示，非确定性结论。\n\n## 小结\n\n当前可判断的核心风险是**高温、低湿、强光的复合胁迫**，且升温较快；降水与土壤水分等方面因证据时间错位或缺失，暂无法判断。",
+  "llm_status": "success",
+  "key_diffs": [
+    "predicted_attention=None，预期 ['WATCH']"
+  ]
+}

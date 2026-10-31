@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134344-835275",
+  "case_id": "case_conflict_02",
+  "group": "conflict",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_uncertain，预期 ['attention_uncertain']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['分歧', '不确定', '不一致', 'attention_uncertain']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_uncertain"
+      ],
+      "actual": "attention_uncertain"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可判断的风险（基于观测与历史）\n\n- **高温胁迫风险**：观测温度 38.1℃，已处于番茄生长的高温胁迫区间，可判断为需关注的风险点。\n- **升温趋势明显**：3 小时内从 26.3℃ 升至 38.1℃，升温幅度大、速度快，可判断为环境波动风险。\n- **低湿叠加**：湿度 27.8%，与高温同时出现，蒸腾压力偏大，可判断为复合胁迫倾向。\n- **强光照**：光照 48794 lux 偏高，与高温低湿叠加，可判断为加剧蒸腾的条件。\n\n## 因证据受限无法判断\n\n- **未来是否持续恶化**：天气证据的时间戳为 2026-10-22 至 10-23，与观测时间 2026-10-08 不一致，不能用于推断当前时段的后续走势；且天气数据显示夜间降温，与“持续恶化”方向不一致，存在分歧。\n- **降水/云量对当前地块的实际影响**：外部天气与本地观测时段不匹配，无法据此判断缓解作用是否成立。\n- **专业阈值依据**：知识引用为空，缺少番茄各生育期温度/湿度阈值的权威依据，无法给出定量风险等级。\n- **土壤、水分、通风、生育期等**：证据中均未提供，无法判断。\n\n## 结论\n\n内部证据支持“提高关注”，但外部天气与专业知识均不足以支撑单一确定结论，整体维持 **attention_uncertain（需关注、存在不确定性）**，不宜下强确定性判断。",
+  "llm_status": "success",
+  "key_diffs": []
+}

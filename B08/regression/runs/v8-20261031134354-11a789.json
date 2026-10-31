@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134354-11a789",
+  "case_id": "case_drift_01",
+  "group": "drift",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention，预期 ['attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['升温', '趋势', '上升', 'attention']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention"
+      ],
+      "actual": "attention"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的风险\n\n**1. 温度偏高且短时上升明显**\n- 当前温度 30.0℃，处于番茄生长偏高温区间，可能对开花坐果和光合效率形成压力。\n- 3 小时内从 25.0℃ 升至 30.0℃（+5℃），升温速率较快，存在短时热胁迫倾向。\n\n**2. 湿度偏低**\n- 当前湿度 47.3%，对番茄而言偏干，可能增加蒸腾负担，并与高温叠加形成水分胁迫风险。\n\n**3. 高温与低湿叠加**\n- 30℃ + 47.3%RH 的组合使植株蒸腾需求上升，属于需要关注的环境组合。\n\n**4. 系统判定为 attention**\n- 与上述温湿度信号方向一致，提示需持续观察。\n\n## 因证据受限无法判断\n\n- **光照风险**：仅有 light=10.0，缺少单位、量纲和时段基准（20:00 为夜间），无法判断是否异常。\n- **趋势与持续性**：历史仅 7 条、窗口 3 小时，无法判断是否为短期波动还是持续恶化。\n- **外部天气影响**：weather_evidence 为 null，无法关联室外天气、通风或降温条件。\n- **作物状态**：无品种、生育期、长势、土壤水分等数据，无法评估实际受害程度。\n- **知识依据**：knowledge_citation 为空，缺少阈值标准来源，上述区间判断仅为一般性参考。\n- **夜间光照合理性**：无日出日落或补光信息，无法确认 light=10.0 是否正常。\n\n## 小结\n可判断的是**温度偏高、升温较快、湿度偏低及二者叠加的蒸腾压力**；光照、持续性、外部天气和作物实际响应因证据不足无法判断。建议补充光照单位、更长历史序列和天气数据后再做进一步评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

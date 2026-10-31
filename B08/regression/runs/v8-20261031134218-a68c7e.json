@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134218-a68c7e",
+  "case_id": "case_drift_02",
+  "group": "drift",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention，预期 ['attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['升温', '趋势', '上升']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention"
+      ],
+      "actual": "attention"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的方面\n\n- **温度偏高且呈上升趋势**：当前 28.3℃，2 小时内从 25.0℃ 升至 28.3℃，升温约 3.3℃。番茄生长适温通常低于此区间上限，该趋势值得关注。\n- **湿度偏低**：48.2% 处于偏干水平，结合温度上升，蒸腾压力可能增大。\n- **光照数据存疑**：19:00 记录到 1500 lux，与日落时段不符，可能是人工补光或传感器口径问题，需核实。\n- **系统判定为 attention**：与上述温度上升、湿度偏低的观察方向一致。\n\n## 因证据受限无法判断的方面\n\n- **天气与外部环境**：weather_evidence 为空，无法判断是否为自然升温、通风不足或设备影响。\n- **知识依据**：knowledge_citation 为空，无法引用具体阈值标准来量化风险等级。\n- **历史全貌**：仅有 5 条摘要（首末温度），缺少湿度、光照的历史序列，无法判断湿度是否同步下降、光照是否异常。\n- **持续时间与峰值**：只有 2 小时窗口，无法判断升温是否持续、是否已接近或超过番茄的耐受上限。\n- **作物状态**：无品种、生育期、长势等数据，无法评估实际受影响程度。\n\n## 小结\n\n可判断的是：**温度偏高并快速上升、湿度偏干，构成需关注的环境信号**；但受限于天气证据缺失、知识引用为空、历史序列不完整，**无法确定成因、风险等级及对作物的实际影响**，建议补充外部天气、完整时序与阈值标准后再评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

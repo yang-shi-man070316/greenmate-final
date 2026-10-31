@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134403-e94c9d",
+  "case_id": "case_stable_02",
+  "group": "stable",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=stable，预期 ['stable']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['stable']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "stable"
+      ],
+      "actual": "stable"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的方面\n\n- **温度**：当前 29.9℃，近 2.5 小时由 28.9℃ 升至 29.9℃，呈缓慢上升趋势，处于偏高区间，存在高温胁迫的潜在风险（非确定性结论）。\n- **湿度**：当前 44.2%，相对偏低，与偏高温度叠加时，蒸腾压力可能增大。\n- **光照**：26581 lux，属中等偏强水平，与午后时段相符。\n- **系统判定**：快照判定为 stable，与观测值无冲突。\n\n## 因证据受限无法判断的方面\n\n- **天气背景**：weather_evidence 为 null，无法判断外部天气（如是否临近降温、降雨）对棚内环境的后续影响。\n- **知识依据**：knowledge_citation 为空，缺少番茄各生育期温湿度阈值的权威引用，无法给出定量超标判定。\n- **趋势持续性**：历史仅 6 条、窗口 2.5 小时，无法判断温升是短期波动还是持续趋势。\n- **其他关键因子**：无 CO₂、土壤水分、VPD 计算所需完整数据，也无作物生育期信息，无法评估综合胁迫程度。\n\n## 小结\n\n可判断的是「温度偏高、湿度偏低、光照中等」这一即时状态及短期升温方向；天气、阈值依据、更长趋势与作物阶段信息缺失，相关风险结论受限。",
+  "llm_status": "success",
+  "key_diffs": []
+}

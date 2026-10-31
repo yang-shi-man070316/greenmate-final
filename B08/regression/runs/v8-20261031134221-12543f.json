@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134221-12543f",
+  "case_id": "case_stable_01",
+  "group": "stable",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=stable，预期 ['stable']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['稳定', '平稳']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "stable"
+      ],
+      "actual": "stable"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的方面\n\n- **温度**：当前 29.0℃，近 3 小时从 28.9℃ 到 29.0℃，变化很小，温度处于平稳状态，未见明显波动风险。\n- **湿度**：当前 45.4%，属于偏低区间，存在一定的空气干燥倾向，可提示关注。\n- **光照**：当前 21595 lx，光照强度较高，需留意强光与高温叠加的可能影响。\n- **整体趋势**：系统判定为 stable，与温度历史平稳的观察一致。\n\n## 因证据受限无法判断的方面\n\n- **天气背景**：weather_evidence 为 null，无法判断外部天气（如阴晴、风力、降雨）对棚内环境的影响。\n- **知识依据**：knowledge_citation 为空，缺少作物适宜区间等标准支撑，无法对温湿度、光照是否超出番茄适宜范围做定量判定。\n- **湿度与光照的历史趋势**：history_summary 仅含温度序列，无法判断湿度、光照是否在恶化或恢复。\n- **土壤/根区状况**：无土壤温湿度、EC 等数据，无法评估根区风险。\n- **病虫害与作物长势**：无相关观测，无法判断生物性风险。\n\n## 小结\n\n可判断的是：温度平稳、湿度偏低、光照较强，整体环境暂呈稳定。受限的是：缺少天气、知识标准、湿度/光照历史及土壤与作物信息，因此对“是否已构成实质风险”只能作提示性判断，不宜下确定性结论。",
+  "llm_status": "success",
+  "key_diffs": []
+}

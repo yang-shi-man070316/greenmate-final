@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134045-dd8de2",
+  "case_id": "case_drift_02",
+  "group": "drift",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention，预期 ['attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['升温', '趋势', '上升']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention"
+      ],
+      "actual": "attention"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的风险\n\n**1. 温度偏高且呈上升趋势**\n- 19:00 温度 28.3°C，2 小时内从 25.0°C 升至 28.3°C（+3.3°C）。\n- 傍晚时段温度持续上行，偏离番茄适宜区间（通常白天 20–28°C 左右）的上沿，存在高温胁迫的潜在风险，值得关注。\n\n**2. 湿度偏低**\n- 当前湿度 48.2%，处于偏低水平，可能增加蒸腾压力，与高温叠加时风险倾向上升。\n\n**3. 光照偏低**\n- 19:00 光照 1500 lux，属傍晚自然衰减，单点数值本身不构成异常，但需结合补光策略判断。\n\n**4. 系统判定**\n- 判定快照为 `attention`（关注），与上述温度上行、湿度偏低的观察方向一致。\n\n## 因证据受限无法判断\n\n- **天气与外部环境**：`weather_evidence` 为 null，无法判断温度上升是外部天气驱动还是棚内设备/通风问题。\n- **知识依据**：`knowledge_citation` 为空，缺少针对该品种/生育期的阈值标准，无法给出精确的适宜区间判定。\n- **趋势持续性**：仅 5 个点、2 小时窗口，无法判断升温是否会持续或回落。\n- **其他关键因子**：无 CO₂、土壤/基质含水率、VPD、病害指标等数据，无法评估水分胁迫与病害风险。\n- **空间分布**：单点观测，无法判断棚内温度/湿度是否均匀。\n\n## 小结\n可判断的是：傍晚温度偏高且快速上行、湿度偏低，属需关注的环境漂移信号。无法判断的是成因（天气/设备）、是否持续、以及水分与病害等关联风险——这些需补充天气数据、阈值标准和多点/多因子监测后才能评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134205-218370",
+  "case_id": "case_conflict_02",
+  "group": "conflict",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_uncertain，预期 ['attention_uncertain']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['分歧', '可能缓解']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_uncertain"
+      ],
+      "actual": "attention_uncertain"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可判断的风险\n\n**1. 当前高温低湿胁迫（观测证据直接支持）**\n- 14:30 温度 38.1℃、湿度 27.8%，属于高温+低湿组合，番茄蒸腾压力偏大、花粉活力与坐果可能受影响，需提高关注。\n- 光照 48794 lux 处于较强水平，与高温叠加会进一步加剧水分胁迫。\n\n**2. 短期升温趋势明显（历史证据支持）**\n- 11:30→14:30 温度由 26.3℃ 升至 38.1℃，3 小时内升幅约 11.8℃，说明午后热积累较快，趋势方向可判断为“升温”。\n\n**3. 外部天气可能带来缓解（天气证据支持，但时间不匹配）**\n- 预报显示 10-22 夜间温度由 30℃ 逐步降至 23℃，降水概率低、云量减少，提示夜间有降温空间。\n\n## 因证据受限无法判断\n\n**1. 天气证据与观测时间不对应**\n- 观测时间为 2026-10-08 14:30，而天气预报时间为 10-22～10-23，两者相差约两周，不能直接用于解释或预测当前棚内环境，缓解作用只能作为参考，不能作为当前判断依据。\n\n**2. 缺乏专业知识依据**\n- knowledge_citation 为空，无法引用番茄各生育期的高温/低湿阈值标准，因此不能判断 38.1℃/27.8% 是否已越过具体生育阶段的受害临界值。\n\n**3. 缺乏土壤/基质水分、通风、CO₂ 等数据**\n- 无法判断植株实际水分供应是否充足、棚内通风是否有效，因而不能评估胁迫的实际严重程度。\n\n**4. 缺乏未来棚内环境预测**\n- 仅有历史 7 条记录与外部天气，无法推断棚内温度后续走向，不能判断是否会持续恶化。\n\n## 综合结论\n当前可判断的是：**存在高温低湿的即时胁迫信号，且午后升温趋势明确，值得提高关注**；但受限于天气证据时间错位、缺少专业阈值与棚内水分/通风数据，**无法判断胁迫是否已达受害程度、是否会持续或恶化**。这与判定快照“attention_uncertain”一致——内部证据支持关注，外部天气提示可能缓解，二者存在分歧，不宜合并为单一确定结论。",
+  "llm_status": "success",
+  "key_diffs": []
+}

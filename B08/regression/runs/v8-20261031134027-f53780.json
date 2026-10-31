@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134027-f53780",
+  "case_id": "case_conflict_01",
+  "group": "conflict",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_uncertain，预期 ['attention_uncertain']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['分歧', '不一致']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_uncertain"
+      ],
+      "actual": "attention_uncertain"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可判断的风险\n\n**1. 当前高温、低湿风险（观测证据直接支持）**\n- 14:30 实测温度 38.1℃，湿度 27.8%，光照约 4.9 万 lux。\n- 对照 K01 温度适宜范围，38.1℃ 已明显偏高；湿度 27.8% 偏低，高温叠加低湿对番茄蒸腾与水分平衡构成压力。\n- 结合 K04 高温应对，可判断当前时段需要采取降温、补水或遮阳等关注性措施。\n\n**2. 短时升温趋势（历史证据支持）**\n- 11:30 至 14:30 共 7 条记录，温度由 26.3℃ 升至 38.1℃，呈明显上升。\n- 但依据 K09，这只能说明“已发生的升温”，不能据此推断未来一定继续恶化。\n\n## 证据受限、无法判断的方面\n\n**1. 未来天气走向存在分歧**\n- 外部天气证据的时间戳为 2026-10-22 至 10-23，与观测时间 2026-10-08 不一致，时效性存疑，不能直接用于当前场景的短期预测。\n- 即便参考该数据，其显示夜间温度逐步回落至 23℃、降水概率低，与“高温持续”方向相反，因此无法据此确认风险会加剧还是缓解。\n\n**2. 无法判断的维度**\n- 土壤湿度、灌溉状态、植株长势与品种耐热性：证据中均缺失。\n- 通风条件、遮阳设施、CO₂ 浓度：无数据。\n- 高温是否已造成实际生理胁迫（如萎蔫、落花）：无现场影像或植株状态记录。\n\n## 综合结论\n当前可判断的是“高温低湿的即时环境压力”和“已发生的升温趋势”，属于需要提高关注的信号；但未来是否持续恶化、以及植株实际受影响程度，因外部天气时效不匹配和田间数据缺失而受限，不宜下确定性结论。",
+  "llm_status": "success",
+  "key_diffs": []
+}

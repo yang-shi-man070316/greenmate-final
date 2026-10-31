@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134347-fdf19f",
+  "case_id": "case_degraded_01",
+  "group": "degraded",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_weather_missing，预期 ['attention_weather_missing']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=unavailable，预期 unavailable"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['受限', '缺失', '不可用', '无法判断']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_weather_missing"
+      ],
+      "actual": "attention_weather_missing"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "unavailable",
+      "actual": "unavailable"
+    }
+  },
+  "llm_answer": "## 可判断的风险（基于观测与历史）\n\n- **高温胁迫风险**：当前温度 38.1℃，已明显偏高（K01 温度适宜范围），属于需要关注的高温情形，可参考 K04 高温应对措施。\n- **升温趋势明显**：3 小时内由 26.3℃ 升至 38.1℃，升温幅度较大，趋势方向可判断为持续升温（K09 提示趋势判断存在限制，故仅描述方向，不作外推）。\n- **低湿叠加**：湿度 27.8%，与高温同时出现，蒸腾压力偏大，属于可识别的组合风险。\n- **强光**：光照 48794，处于较高水平，可能加剧高温与蒸腾的叠加影响。\n\n## 因证据受限无法判断\n\n- **未来天气走向**：天气证据不可用（调用失败），无法评估后续是否降温、是否有缓解或反向变化，风险的时间维度缺失。\n- **趋势的持续性**：仅有 7 条、3 小时窗口的历史，样本短，无法判断高温是短时波动还是持续过程（K09）。\n- **夜间/次日风险**：无未来数据，无法评估夜间温度回落情况。\n- **土壤水分、CO₂、病害等维度**：快照中未提供，无法判断。\n\n## 结论\n\n当前可判断为**需关注的高温低湿组合情形**，但因天气证据缺失，判断边界已收缩，不宜对后续演变作确定性推断。建议优先按 K04 采取降温、增湿等应对，并补充天气与更长历史数据后再评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

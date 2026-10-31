@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134030-f143e9",
+  "case_id": "case_conflict_02",
+  "group": "conflict",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_uncertain，预期 ['attention_uncertain']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['不一致', '可能缓解']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_uncertain"
+      ],
+      "actual": "attention_uncertain"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可判断的风险（基于观测与历史）\n\n- **高温胁迫风险偏高**：14:30 气温 38.1℃，已明显高于番茄适宜生长温度区间，存在热害、花粉活力下降等风险。\n- **空气干燥**：湿度 27.8%，偏低，蒸腾压力大，可能加剧高温下的水分胁迫。\n- **升温趋势明显**：11:30 至 14:30 气温由 26.3℃ 升至 38.1℃，3 小时内升幅约 11.8℃，说明午后升温较快，需关注持续高温。\n- **强光照**：光照 48794 lux，配合高温低湿，可能加重叶片灼伤与失水。\n\n## 证据受限、无法判断的方面\n\n- **未来天气能否缓解**：外部天气证据的时间戳为 2026-10-22 至 10-23，与观测时间 2026-10-08 不一致，不能直接用于判断当前或近期走势，因此“天气可能缓解”这一说法缺乏可用支撑。\n- **土壤水分、灌溉状态**：无相关数据，无法判断根系是否已受干旱胁迫。\n- **作物品种、生育期与长势**：缺失，无法评估具体耐受阈值。\n- **专业知识依据**：knowledge_citation 为空，缺少可引用的阈值或机理来源。\n- **趋势是否持续恶化**：仅有 7 条、3 小时窗口的历史，不足以推断后续走向。\n\n## 综合\n\n当前可判断的是“高温+低湿+强光”组合带来的即时胁迫风险，值得提高关注；但未来是否缓解或恶化、以及作物实际受害程度，因外部天气时间错位和田间数据缺失而受限，不宜下确定性结论。",
+  "llm_status": "success",
+  "key_diffs": []
+}

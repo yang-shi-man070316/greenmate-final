@@ -1,0 +1,56 @@
+{
+  "run_id": "v8-20261031134056-63d31e",
+  "case_id": "case_weather_01",
+  "group": "weather",
+  "passed": false,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=weather_attention，预期 ['weather_attention']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": false,
+      "detail": "predicted_attention=None，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=ok，预期 ok"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['天气', '降水', '云量', '阴雨']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "weather_attention"
+      ],
+      "actual": "weather_attention"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": null
+    },
+    "weather_status": {
+      "expected": "ok",
+      "actual": "ok"
+    }
+  },
+  "llm_answer": "## 可以判断的方面\n\n**1. 当前高温低湿胁迫（观测证据充分）**\n- 14:30 实测温度 38.1℃、湿度 27.8%，属于高温+低湿组合，番茄蒸腾与授粉可能受影响。\n- 近 3 小时温度由 26.3℃ 升至 38.1℃（7 条记录），升温幅度明显，短时热积累风险存在。\n\n**2. 光照偏强**\n- 光照 48794 lux，配合高温低湿，强光灼伤/水分亏缺的叠加压力值得关注。\n\n**3. 未来降水与云量趋势（天气证据 status=ok）**\n- 10-22 20:00 至 10-23 01:00 降水概率 70%~92%、云量 80%~95%，提示后续可能转阴雨、光照下降。\n\n**4. 系统判定**\n- 判定为 `weather_attention`（天气关注级），与上述高温低湿+后续降水信号方向一致。\n\n## 因证据受限无法判断的方面\n\n- **时效错配**：观测时间为 2026-10-08，天气预报为 10-22~10-23，两者相隔约两周，无法据此判断观测当日之后的实际天气走向。\n- **土壤/根区水分**：无土壤湿度、灌溉记录，无法判断低湿是空气干燥还是水分亏缺所致。\n- **作物状态**：无品种、生育期、长势、病虫害记录，无法评估实际受害程度。\n- **知识依据缺失**：`knowledge_citation` 为空，缺少阈值标准引用，风险等级只能定性描述。\n- **历史窗口过短**：仅 3 小时 7 条记录，无法判断是否为持续高温过程。\n\n## 小结\n可判断的是「当前时点存在高温低湿+强光叠加的胁迫信号，且系统给出关注级提示」；但受时效错配、土壤与作物数据缺失、无知识引用所限，无法量化风险程度或预测后续演变。建议补充根区水分与作物状态数据后再做评估。",
+  "llm_status": "success",
+  "key_diffs": [
+    "predicted_attention=None，预期 ['WATCH']"
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "run_id": "v8-20261031134053-13830f",
+  "case_id": "case_stable_02",
+  "group": "stable",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=stable，预期 ['stable']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=NORMAL，预期 ['NORMAL', 'WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=None，预期 None"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['稳定']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "stable"
+      ],
+      "actual": "stable"
+    },
+    "model_attention": {
+      "expected": [
+        "NORMAL",
+        "WATCH"
+      ],
+      "actual": "NORMAL"
+    },
+    "weather_status": {
+      "expected": null,
+      "actual": null
+    }
+  },
+  "llm_answer": "## 可判断的风险方面\n\n- **温度偏高**：观测值 29.9℃，且 13:30–16:00 窗口内由 28.9℃ 升至 29.9℃，呈缓慢上升趋势。对番茄而言处于偏高区间，存在轻度热胁迫可能，但幅度有限。\n- **湿度偏低**：44.2%，相对偏低，可能增加蒸腾压力，与偏高温度叠加时需留意。\n- **光照**：26581 lux，属中等偏上水平，单看数值无明显异常。\n- **整体判定**：系统快照给出 stable，与上述“偏高但未越界”的观测一致。\n\n## 因证据受限无法判断的方面\n\n- **天气与外部环境**：weather_evidence 为 null，无法判断是否为外部高温/干燥天气传导，也无法评估未来趋势。\n- **知识依据**：knowledge_citation 为空，缺少番茄各生育期的阈值标准，无法给出定量越界结论。\n- **时间维度**：仅 6 条、2.5 小时窗口，无法判断是否为持续趋势或短期波动，也无法覆盖夜间/清晨低温风险。\n- **其他关键因子**：无 CO₂、土壤/基质含水率、VPD 计算所需完整数据，无法评估水分与蒸腾综合风险。\n- **verdict_note 为空**：系统未给出判定理由，无法复核其 stable 结论的具体依据。\n\n## 小结\n\n可判断的是“温度偏高、湿度偏低、光照中等，整体处于稳定但偏热偏干的状态”；受限于天气证据、知识引用和时间跨度不足，无法判断外部成因、是否越界及后续走势。建议补充天气数据与番茄生育期阈值后再做定量评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

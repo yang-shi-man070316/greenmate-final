@@ -1,0 +1,54 @@
+{
+  "run_id": "v8-20261031134038-0572a8",
+  "case_id": "case_degraded_02",
+  "group": "degraded",
+  "passed": true,
+  "checks": [
+    {
+      "check": "结构化判断",
+      "passed": true,
+      "detail": "verdict=attention_weather_missing，预期 ['attention_weather_missing']"
+    },
+    {
+      "check": "model_output 区间",
+      "passed": true,
+      "detail": "predicted_attention=WATCH，预期 ['WATCH']"
+    },
+    {
+      "check": "证据状态",
+      "passed": true,
+      "detail": "weather_status=unavailable，预期 unavailable"
+    },
+    {
+      "check": "LLM 与结构化结果对齐",
+      "passed": true,
+      "detail": "命中对齐词：['受限', '缺失', '无法判断']"
+    },
+    {
+      "check": "限制输出要求",
+      "passed": true,
+      "detail": "违规词：无"
+    }
+  ],
+  "expected_vs_actual": {
+    "verdict": {
+      "expected": [
+        "attention_weather_missing"
+      ],
+      "actual": "attention_weather_missing"
+    },
+    "model_attention": {
+      "expected": [
+        "WATCH"
+      ],
+      "actual": "WATCH"
+    },
+    "weather_status": {
+      "expected": "unavailable",
+      "actual": "unavailable"
+    }
+  },
+  "llm_answer": "# 当前番茄生长环境风险分析\n\n## 一、可判断的方面（基于观测与历史数据）\n\n**1. 温度偏高，存在热胁迫风险**\n- 14:00 实测温度 37.8℃，已明显超出番茄适宜温度范围（依据 K01 温度管理）。\n- 历史窗口（11:30–14:00）温度由 26.3℃ 升至 37.8℃，呈快速上升趋势，2.5 小时内升幅约 11.5℃。\n- 结合 K04 高温应对，当前温度水平属于需要关注并采取缓解措施的情形。\n\n**2. 湿度偏低，叠加高温加剧蒸腾压力**\n- 实测湿度 31.0%，在高温条件下空气干燥，植株蒸腾与水分需求压力可能增大（此为环境组合推断，非强确定性结论）。\n\n**3. 光照强度较高**\n- 实测光照 51191（单位按原始记录），处于较强光照水平，与高温时段叠加，可能进一步加重冠层热负荷。\n\n**4. 趋势方向明确（短期）**\n- 仅就已有 6 条历史记录看，温度处于上升通道；但依据 K09 趋势判断限制，该结论仅限当前窗口，不能外推为全天趋势。\n\n## 二、因证据受限无法判断的方面\n\n**1. 未来天气与降温可能性——无法评估**\n- 天气证据状态为 unavailable（调用失败，无未来天气数据），判定快照 verdict 为 attention_weather_missing。\n- 因此无法判断后续是否出现降温、降雨或持续高温，风险的时间演变方向受限。\n\n**2. 缓解/反向变化——无法判断**\n- 缺少未来天气维度，无法评估自然缓解条件是否存在，也无法排除进一步恶化的可能。\n\n**3. 全天温度趋势——受限**\n- 历史仅覆盖 2.5 小时、6 个采样点，依据 K09 不能据此判断全天或更长时间尺度趋势。\n\n**4. 其他环境因子——证据缺失**\n- 土壤水分、CO₂、根系温度等未提供，无法评估水分供应是否匹配当前蒸腾需求。\n\n## 三、小结\n\n可判断：当前时点温度偏高、湿度偏低、光照较强，短期温度呈上升，属需关注的热环境情形。\n受限：未来天气走向、缓解条件、全天趋势及土壤水分等关键维度缺失，风险演变判断不完整，建议补充天气与土壤水分数据后再做综合评估。",
+  "llm_status": "success",
+  "key_diffs": []
+}

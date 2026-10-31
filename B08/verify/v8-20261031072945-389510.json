@@ -1,0 +1,184 @@
+{
+  "scenario_id": "b08_s3_weather",
+  "run_id": "v8-20261031072945-389510",
+  "app_version": "B08_baseline_01",
+  "model_version": "b06-rf-v1",
+  "analysis_time": "2026-10-31 07:29:45",
+  "location": "32.06,118.79（南京，天气证据位置）",
+  "current_state_input": {
+    "temperature": 38.1,
+    "humidity": 27.8,
+    "light": 48794.0,
+    "observed_at": "2026-10-08 14:30:00"
+  },
+  "history_window": [
+    {
+      "timestamp": "2026-10-08 11:30:00",
+      "temperature": 26.3,
+      "humidity": 51.1,
+      "light": 54938.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-08 12:00:00",
+      "temperature": 27.5,
+      "humidity": 49.8,
+      "light": 57833.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-08 12:30:00",
+      "temperature": 32.2,
+      "humidity": 39.9,
+      "light": 57135.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1:ramp_in"
+    },
+    {
+      "timestamp": "2026-10-08 13:00:00",
+      "temperature": 36.9,
+      "humidity": 32.1,
+      "light": 61673.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 13:30:00",
+      "temperature": 37.6,
+      "humidity": 30.3,
+      "light": 57017.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 14:00:00",
+      "temperature": 37.8,
+      "humidity": 31.0,
+      "light": 51191.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 14:30:00",
+      "temperature": 38.1,
+      "humidity": 27.8,
+      "light": 48794.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    }
+  ],
+  "weather_evidence": {
+    "status": "ok",
+    "provider": "open_meteo",
+    "forecast_time": [
+      "2026-10-22T20:00",
+      "2026-10-22T21:00",
+      "2026-10-22T22:00",
+      "2026-10-22T23:00",
+      "2026-10-23T00:00",
+      "2026-10-23T01:00"
+    ],
+    "hourly": [
+      {
+        "time": "2026-10-22T20:00",
+        "precipitation_probability": 88,
+        "cloud_cover": 95
+      },
+      {
+        "time": "2026-10-22T21:00",
+        "precipitation_probability": 92,
+        "cloud_cover": 93
+      },
+      {
+        "time": "2026-10-22T22:00",
+        "precipitation_probability": 85,
+        "cloud_cover": 90
+      },
+      {
+        "time": "2026-10-22T23:00",
+        "precipitation_probability": 80,
+        "cloud_cover": 88
+      },
+      {
+        "time": "2026-10-23T00:00",
+        "precipitation_probability": 75,
+        "cloud_cover": 85
+      },
+      {
+        "time": "2026-10-23T01:00",
+        "precipitation_probability": 70,
+        "cloud_cover": 80
+      }
+    ]
+  },
+  "knowledge_evidence": [],
+  "model_evidence": {
+    "model_version": "b06-rf-v1",
+    "locked": true,
+    "note": "本轮验证固定使用已冻结模型，回放模式不重跑模型"
+  },
+  "tool_runtime_status": {
+    "llm": {
+      "status": "success",
+      "model": "deepseek-chat",
+      "elapsed_ms": 2815
+    },
+    "live_weather_link": {
+      "tool_status": "ok",
+      "provider": "open_meteo",
+      "forecast_time_first": "2026-10-31T00:00",
+      "note": "真实 API 链路单独校验：验证外部天气链路可用性，不参与场景判定"
+    },
+    "replay_only": true
+  },
+  "structured_judgment": {
+    "verdict": "weather_attention",
+    "verdict_note": null
+  },
+  "llm_explanation": {
+    "status": "success",
+    "answer": "**可判断的风险（基于观测与历史）**\n\n- **高温风险**：14:30 气温 38.1℃，已处于番茄生长的高温胁迫区间，可能影响开花坐果与光合效率。\n- **升温过快**：11:30 至 14:30 由 26.3℃ 升至 38.1℃，3 小时内升幅约 11.8℃，短时热积累明显。\n- **低湿叠加**：相对湿度 27.8%，与高温叠加会加剧蒸腾失水与萎蔫风险。\n- **强光**：光照 48794 lux，配合高温低湿，叶片灼伤与水分亏缺压力上升。\n- 系统判定为 `weather_attention`，与上述观测方向一致。\n\n**证据受限、无法判断的方面**\n\n- **降水与云量证据时间错位**：天气预报时段为 2026-10-22 20:00 至 10-23 01:00，与观测时间 2026-10-08 14:30 相差约两周，不能用于判断当前或近期降水风险。\n- **土壤水分/基质含水量**：无数据，无法判断是否已出现水分亏缺或灌溉是否充足。\n- **冠层温度、叶面湿度、CO₂**：无数据，无法评估实际植株热害程度。\n- **后续天气趋势**：缺少与观测日期匹配的预报，无法判断高温是否持续或缓解。\n- **知识引用为空**：无阈值依据来源，上述区间判断仅为方向性提示，非精确阈值结论。\n\n**小结**：当前时点的高温、低湿、强光及快速升温可判断为需关注的风险；降水、土壤水分与后续趋势因证据缺失或时间不匹配，无法判断。",
+    "model": "deepseek-chat",
+    "elapsed_ms": 2815
+  },
+  "limitations": [
+    "全部数据为 SIMULATED 模拟数据，非真实传感器读数",
+    "趋势判定仅基于最近 3 小时（6 个采样点）",
+    "模型预测基于 B02 历史分布训练，时间外推存在不确定性",
+    "结构化判断由系统生成，LLM 无权修改，仅用于解释",
+    "风险升级完全归因于外部天气预报（内部稳态判定不变），天气证据参与推理而非仅展示",
+    "B08 验证模式：输入完全来自冻结快照（回放），未重新查询数据源"
+  ],
+  "verify_result": {
+    "passed": true,
+    "reason": "天气证据参与未来趋势判断，真实 API 链路单独校验通过，外部证据影响预测而非仅展示",
+    "checks": [
+      {
+        "check": "快照字段完整",
+        "passed": true
+      },
+      {
+        "check": "版本标记正确",
+        "passed": true
+      },
+      {
+        "check": "LLM 固定提问执行成功",
+        "passed": true
+      },
+      {
+        "check": "判定为 weather_attention（天气影响判断）",
+        "passed": true
+      },
+      {
+        "check": "真实 API 链路校验通过",
+        "passed": true
+      },
+      {
+        "check": "天气证据参与推理（LLM 解释引用天气/降水/云量）",
+        "passed": true
+      }
+    ]
+  }
+}

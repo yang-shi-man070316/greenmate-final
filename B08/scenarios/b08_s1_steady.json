@@ -1,0 +1,82 @@
+{
+  "scenario_id": "b08_s1_steady",
+  "name": "S1 稳态基线",
+  "source_module": "B07/S1",
+  "source_run_id": "s1-20261020212515-1d9ba6",
+  "app_version": "B08_baseline_01",
+  "model_version": "b06-rf-v1",
+  "knowledge_version": "b04_kb_v1（K01~K09，knowledge_base.json version 1.0）",
+  "frozen_at": "2026-10-31 04:38:42",
+  "fixed_question": "结合全部可用证据，分析当前番茄生长环境风险：哪些方面可以判断，哪些方面因证据受限无法判断？",
+  "observation": {
+    "temperature": 29.0,
+    "humidity": 45.4,
+    "light": 21595.0,
+    "observed_at": "2026-10-20 16:30:00"
+  },
+  "history_series": [
+    {
+      "timestamp": "2026-10-20 13:30:00",
+      "temperature": 28.9,
+      "humidity": 47.0,
+      "light": 48823.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 14:00:00",
+      "temperature": 29.4,
+      "humidity": 43.8,
+      "light": 47061.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 14:30:00",
+      "temperature": 30.2,
+      "humidity": 45.7,
+      "light": 43293.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 15:00:00",
+      "temperature": 30.3,
+      "humidity": 45.5,
+      "light": 38417.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 15:30:00",
+      "temperature": 30.4,
+      "humidity": 45.9,
+      "light": 35261.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 16:00:00",
+      "temperature": 29.9,
+      "humidity": 44.2,
+      "light": 26581.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-20 16:30:00",
+      "temperature": 29.0,
+      "humidity": 45.4,
+      "light": 21595.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    }
+  ],
+  "weather_evidence": null,
+  "knowledge_citation": [],
+  "judgment_snapshot": {
+    "verdict": "stable",
+    "verdict_note": null
+  },
+  "frozen": true
+}

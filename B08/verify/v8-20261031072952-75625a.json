@@ -1,0 +1,157 @@
+{
+  "scenario_id": "b08_s5_degraded",
+  "run_id": "v8-20261031072952-75625a",
+  "app_version": "B08_baseline_01",
+  "model_version": "b06-rf-v1",
+  "analysis_time": "2026-10-31 07:29:52",
+  "location": "32.06,118.79（南京，天气证据本应覆盖位置，本次缺失）",
+  "current_state_input": {
+    "temperature": 38.1,
+    "humidity": 27.8,
+    "light": 48794.0,
+    "observed_at": "2026-10-08 14:30:00"
+  },
+  "history_window": [
+    {
+      "timestamp": "2026-10-08 11:30:00",
+      "temperature": 26.3,
+      "humidity": 51.1,
+      "light": 54938.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-08 12:00:00",
+      "temperature": 27.5,
+      "humidity": 49.8,
+      "light": 57833.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "normal"
+    },
+    {
+      "timestamp": "2026-10-08 12:30:00",
+      "temperature": 32.2,
+      "humidity": 39.9,
+      "light": 57135.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1:ramp_in"
+    },
+    {
+      "timestamp": "2026-10-08 13:00:00",
+      "temperature": 36.9,
+      "humidity": 32.1,
+      "light": 61673.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 13:30:00",
+      "temperature": 37.6,
+      "humidity": 30.3,
+      "light": 57017.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 14:00:00",
+      "temperature": 37.8,
+      "humidity": 31.0,
+      "light": 51191.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    },
+    {
+      "timestamp": "2026-10-08 14:30:00",
+      "temperature": 38.1,
+      "humidity": 27.8,
+      "light": 48794.0,
+      "source_type": "SIMULATED",
+      "sim_scenario": "D1"
+    }
+  ],
+  "weather_evidence": {
+    "status": "unavailable",
+    "reason": "天气证据调用失败（无未来天气数据），判断边界收缩"
+  },
+  "knowledge_evidence": [
+    {
+      "id": "K09",
+      "source": "knowledge/greenmate_care_guide.md#趋势判断限制",
+      "topic": "高温趋势判断限制"
+    },
+    {
+      "id": "K01",
+      "source": "knowledge/greenmate_care_guide.md#温度管理",
+      "topic": "温度适宜范围"
+    },
+    {
+      "id": "K04",
+      "source": "knowledge/greenmate_care_guide.md#高温应对",
+      "topic": "高温应对"
+    }
+  ],
+  "model_evidence": {
+    "model_version": "b06-rf-v1",
+    "locked": true,
+    "note": "本轮验证固定使用已冻结模型，回放模式不重跑模型",
+    "source_prediction": {
+      "predicted_attention": "WATCH",
+      "probability": {
+        "NORMAL": 0.045,
+        "WATCH": 0.955
+      }
+    }
+  },
+  "tool_runtime_status": {
+    "llm": {
+      "status": "success",
+      "model": "deepseek-chat",
+      "elapsed_ms": 3089
+    },
+    "live_weather_link": null,
+    "replay_only": true
+  },
+  "structured_judgment": {
+    "verdict": "attention_weather_missing",
+    "verdict_note": "天气证据缺失：无法评估未来降温等缓解/反向变化，风险判断失去天气维度"
+  },
+  "llm_explanation": {
+    "status": "success",
+    "answer": "# 当前番茄生长环境风险分析\n\n## 一、可判断的方面（基于现有观测与历史）\n\n**1. 温度处于明显偏高状态**\n- 14:30 实测温度 38.1℃，已超出番茄适宜温度范围（依据 K01 温度适宜范围）。\n- 3 小时内从 26.3℃ 升至 38.1℃，升温幅度约 11.8℃，属于快速升温过程。\n\n**2. 湿度偏低**\n- 实测湿度 27.8%，与高温叠加，形成高温低湿的胁迫组合。\n\n**3. 光照强度较高**\n- 实测光照 48794 lux，处于较强光照水平，与高温时段吻合。\n\n**4. 需要关注并采取高温应对**\n- 当前温湿组合符合需要启动高温应对措施的情形（依据 K04 高温应对）。\n\n## 二、因证据受限无法判断的方面\n\n**1. 未来天气走向无法评估**\n- 天气证据调用失败（无未来天气数据），无法判断后续是否降温、是否有缓解或反向变化。\n\n**2. 高温趋势的持续性无法确认**\n- 依据 K09 趋势判断限制，仅凭 7 个历史点、3 小时窗口，不足以对高温是否持续或加剧作出趋势性结论。\n\n**3. 风险等级无法完整定级**\n- 系统判定为 `attention_weather_missing`：天气维度缺失，风险判断边界收缩，无法给出含天气因素的综合风险结论。\n\n## 三、小结\n\n可判断：当前存在高温、低湿、强光的即时环境胁迫，需关注并考虑高温应对。\n受限：未来天气、趋势持续性、综合风险等级均因天气证据缺失而无法判断，不宜作确定性结论。",
+    "model": "deepseek-chat",
+    "elapsed_ms": 3089
+  },
+  "limitations": [
+    "B08 验证模式：输入完全来自冻结快照（回放），未重新查询数据源"
+  ],
+  "verify_result": {
+    "passed": true,
+    "reason": "某一路证据缺失时系统继续工作、缩小判断范围，未整体崩溃、未编造缺失证据",
+    "checks": [
+      {
+        "check": "快照字段完整",
+        "passed": true
+      },
+      {
+        "check": "版本标记正确",
+        "passed": true
+      },
+      {
+        "check": "LLM 固定提问执行成功",
+        "passed": true
+      },
+      {
+        "check": "天气证据缺失已固化（unavailable）",
+        "passed": true
+      },
+      {
+        "check": "判定为 attention_weather_missing（缩小判断范围）",
+        "passed": true
+      },
+      {
+        "check": "不编造缺失证据（LLM 解释无天气数据陈述且说明受限）",
+        "passed": true
+      }
+    ]
+  }
+}
