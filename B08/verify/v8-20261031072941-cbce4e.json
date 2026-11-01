@@ -134,5 +134,16 @@
         "passed": true
       }
     ]
+  },
+  "_innovate": {
+    "evidence_score": {
+      "history": 1.0,
+      "weather": null,
+      "knowledge": null,
+      "model": 1.0
+    },
+    "confidence_total": 0.9,
+    "confidence_note": "证据充足，参考价值高",
+    "trace_generated": true
   }
 }
